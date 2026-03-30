@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OrderOne — Pickup Screen</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --orange:#FF6B35;--yellow:#F5C400;--greenp:#4CAF72;
+  --pink:#FF2D55;--teal:#00CCBC;--purple:#A855F7;
+  --green:#22c55e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#060606;color:#fff;font-family:'DM Mono',monospace;min-height:100vh;display:flex;flex-direction:column}
+
+header{display:flex;align-items:center;justify-content:space-between;padding:24px 44px 20px;border-bottom:1px solid #0f0f0f;flex-shrink:0}
+.hdr-left{}
+.hdr-title{font-family:'Syne',sans-serif;font-size:clamp(22px,3vw,38px);font-weight:800;letter-spacing:-1px;color:#fff}
+.hdr-sub{font-size:clamp(10px,1.2vw,14px);color:#2e2e2e;margin-top:4px;letter-spacing:.04em}
+.hdr-right{display:flex;align-items:center;gap:20px}
+.clock{font-family:'Syne',sans-serif;font-size:clamp(20px,2.5vw,34px);font-weight:700;color:#1e1e1e;letter-spacing:-.5px}
+.brand{font-family:'Syne',sans-serif;font-size:clamp(13px,1.5vw,17px);font-weight:800;color:#161616}
+.brand em{color:#FF6B35;font-style:normal}
+
+main{flex:1;padding:28px 44px;overflow:hidden}
+.sec-label{font-size:clamp(8px,.9vw,10px);font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#202020;margin-bottom:14px}
+
+.ready-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:36px}
+.rtile{background:#0e0e0e;border:1px solid #161616;border-radius:18px;padding:20px 18px;animation:pop .28s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
+.tile-plat{display:flex;align-items:center;gap:6px;font-size:clamp(10px,1vw,12px);font-weight:500;margin-bottom:10px}
+.tile-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tile-num{font-family:'Syne',sans-serif;font-size:clamp(36px,5vw,54px);font-weight:800;line-height:1;margin-bottom:8px;letter-spacing:-2px}
+.tile-badge{display:inline-block;font-size:clamp(8px,.8vw,10px);padding:4px 10px;border-radius:20px;background:#061206;color:var(--green);letter-spacing:.06em}
+
+.prep-section{border-top:1px solid #0f0f0f;padding-top:24px}
+.prep-chips{display:flex;gap:10px;flex-wrap:wrap}
+.pchip{background:#090909;border:1px solid #131313;border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:8px}
+.pchip-dot{width:6px;height:6px;border-radius:50%}
+.pchip-num{font-family:'Syne',sans-serif;font-size:clamp(13px,1.4vw,16px);font-weight:800;color:#333}
+.pchip-info{font-size:clamp(9px,.9vw,11px);color:#222}
+
+.empty-msg{text-align:center;padding:80px 0;font-family:'Syne',sans-serif;font-size:clamp(14px,2vw,22px);font-weight:700;color:#141414}
+
+footer{padding:10px 44px;border-top:1px solid #0d0d0d;display:flex;justify-content:space-between;font-size:clamp(8px,.8vw,10px);color:#181818;letter-spacing:.06em;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-left">
+    <div class="hdr-title">Pickup window</div>
+    <div class="hdr-sub">DRIVERS — WAIT OUTSIDE UNTIL YOUR NUMBER APPEARS BELOW</div>
+  </div>
+  <div class="hdr-right">
+    <div class="clock" id="clock">--:--</div>
+    <div class="brand">Order<em>One</em></div>
+  </div>
+</header>
+
+<main>
+  <div class="sec-label" id="ready-lbl">Ready for collection now</div>
+  <div class="ready-grid" id="ready-grid"></div>
+
+  <div class="prep-section">
+    <div class="sec-label" id="prep-lbl">Being prepared — your order is on its way</div>
+    <div class="prep-chips" id="prep-chips"></div>
+    <div class="empty-msg" id="empty-msg" style="display:none">No active orders right now</div>
+  </div>
+</main>
+
+<footer>
+  <span>OrderOne — unified delivery management · UAE</span>
+  <span>Talabat · Noon · Careem · HungerStation · Deliveroo · InstaShop</span>
+  <span id="footer-time"></span>
+</footer>
+
+<script>
+var PLAT={
+  talabat:{label:'Talabat',color:'#FF6B35'},
+  noon:{label:'Noon',color:'#F5C400'},
+  careem:{label:'Careem',color:'#4CAF72'},
+  hungerstation:{label:'HungerStation',color:'#FF2D55'},
+  deliveroo:{label:'Deliveroo',color:'#00CCBC'},
+  instashop:{label:'InstaShop',color:'#A855F7'}
+};
+
+var orders=[
+  {id:1,num:'#1038',plat:'talabat',status:'ready',at:Date.now()-420000},
+  {id:2,num:'#2051',plat:'noon',status:'preparing',at:Date.now()-300000},
+  {id:3,num:'#3017',plat:'careem',status:'ready',at:Date.now()-360000},
+  {id:4,num:'#1041',plat:'talabat',status:'preparing',at:Date.now()-180000},
+  {id:5,num:'#5002',plat:'deliveroo',status:'preparing',at:Date.now()-90000},
+  {id:6,num:'#6011',plat:'hungerstation',status:'ready',at:Date.now()-500000}
+];
+
+function waitEst(o){var m=Math.floor((Date.now()-o.at)/60000);return'~'+Math.max(2,15-m)+'m';}
+
+function render(){
+  var ready=orders.filter(function(o){return o.status==='ready';});
+  var prep=orders.filter(function(o){return o.status==='preparing';});
+  var rh='';
+  ready.forEach(function(o){
+    var p=PLAT[o.plat];
+    rh+='<div class="rtile"><div class="tile-plat" style="color:'+p.color+'"><span class="tile-dot" style="background:'+p.color+'"></span>'+p.label+'</div><div class="tile-num" style="color:'+p.color+'">'+o.num+'</div><span class="tile-badge">Come collect</span></div>';
+  });
+  document.getElementById('ready-grid').innerHTML=rh;
+  var ph='';
+  prep.forEach(function(o){
+    var p=PLAT[o.plat];
+    ph+='<div class="pchip"><span class="pchip-dot" style="background:'+p.color+'"></span><span class="pchip-num" style="color:'+p.color+'">'+o.num+'</span><span class="pchip-info">'+p.label+' · '+waitEst(o)+'</span></div>';
+  });
+  document.getElementById('prep-chips').innerHTML=ph;
+  document.getElementById('empty-msg').style.display=orders.length===0?'block':'none';
+}
+
+function tick(){
+  var n=new Date(),pad=function(x){return x<10?'0'+x:x;};
+  var t=pad(n.getHours())+':'+pad(n.getMinutes());
+  var tf=t+':'+pad(n.getSeconds());
+  document.getElementById('clock').textContent=t;
+  document.getElementById('footer-time').textContent=tf;
+}
+
+render();tick();
+setInterval(function(){tick();render();},10000);
+</script>
+</body>
+</html>
