@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OrderOne — Menu Tablet</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&family=Noto+Kufi+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#f7f4ef;--card:#fff;--border:#e8e4dc;--border2:#d4cfc6;
@@ -17,9 +17,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:20p
 .brand{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.5px}
 .brand em{color:var(--orange);font-style:normal}
 .header-right{display:flex;align-items:center;gap:12px}
-.lang-tog{display:flex;gap:2px;background:#f0ede8;border:1px solid var(--border2);border-radius:8px;padding:2px}
-.lb{padding:4px 10px;border-radius:6px;border:none;background:transparent;color:var(--ink3);font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;transition:all .15s}
-.lb.on{background:var(--card);color:var(--ink);border:1px solid var(--border)}
+
 .pause-all-btn{padding:8px 16px;border-radius:9px;border:1px solid var(--border2);background:transparent;color:var(--amber);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
 .pause-all-btn:hover{background:#fef3c7;border-color:var(--amber)}
 .pause-all-btn.paused{background:#fef3c7;border-color:var(--amber);color:#92400e}
@@ -67,23 +65,14 @@ main{padding:20px 28px;max-width:900px;margin:0 auto}
 .footer-stat-l{font-size:10px;color:var(--ink3);font-family:'DM Mono',monospace;margin-top:2px}
 .footer-note{margin-left:auto;font-size:12px;color:var(--ink3)}
 
-.rtl-page{direction:rtl;text-align:right;font-family:'Noto Kufi Arabic',sans-serif}
-.rtl-page header,.rtl-page .search-bar,.rtl-page .platforms-bar,.rtl-page main{direction:rtl}
-.rtl-page .header-right{flex-direction:row-reverse}
-.rtl-page .item-row{flex-direction:row-reverse}
-.rtl-page .item-plats{flex-direction:row-reverse}
-.rtl-page .stats-footer{flex-direction:row-reverse}
+
 </style>
 </head>
-<body id="page">
+<body>
 
 <header>
-  <div class="brand">Order<em>One</em> <span style="font-size:13px;font-weight:400;color:var(--ink3);font-family:'DM Sans',sans-serif" id="hdr-sub">Menu Management</span></div>
+  <div class="brand">Order<em>One</em> <span style="font-size:13px;font-weight:400;color:var(--ink3);font-family:'DM Sans',sans-serif">Menu Management</span></div>
   <div class="header-right">
-    <div class="lang-tog">
-      <button class="lb on" id="lb-en" onclick="setLang('en')">EN</button>
-      <button class="lb" id="lb-ar" onclick="setLang('ar')">عر</button>
-    </div>
     <button class="pause-all-btn" id="pause-all-btn" onclick="pauseAll()">Pause all items</button>
   </div>
 </header>
@@ -97,10 +86,10 @@ main{padding:20px 28px;max-width:900px;margin:0 auto}
 <main id="main-content"></main>
 
 <div class="stats-footer">
-  <div class="footer-stat"><div class="footer-stat-n" id="fs-avail" style="color:var(--green)">0</div><div class="footer-stat-l" id="fs-avail-l">Available</div></div>
-  <div class="footer-stat"><div class="footer-stat-n" id="fs-snoozed" style="color:var(--amber)">0</div><div class="footer-stat-l" id="fs-snoozed-l">Snoozed</div></div>
-  <div class="footer-stat"><div class="footer-stat-n" id="fs-total">0</div><div class="footer-stat-l" id="fs-total-l">Total items</div></div>
-  <div class="footer-note" id="fs-note">Tap any item to toggle availability</div>
+  <div class="footer-stat"><div class="footer-stat-n" id="fs-avail" style="color:var(--green)">0</div><div class="footer-stat-l">Available</div></div>
+  <div class="footer-stat"><div class="footer-stat-n" id="fs-snoozed" style="color:var(--amber)">0</div><div class="footer-stat-l">Snoozed</div></div>
+  <div class="footer-stat"><div class="footer-stat-n" id="fs-total">0</div><div class="footer-stat-l">Total items</div></div>
+  <div class="footer-note">Tap any item to toggle availability</div>
 </div>
 
 <script>
@@ -135,32 +124,11 @@ var MENU=[
   ]}
 ];
 
-var LANG='en',activePlat='all',allPaused=false;
+var activePlat='all',allPaused=false;
 
-var T={
-  en:{menu_mgmt:'Menu Management',pause_all:'Pause all items',unpause_all:'Unpause all items',search:'Search menu items...',available:'Available',snoozed:'Snoozed',total:'Total items',tap_note:'Tap any item to toggle availability'},
-  ar:{menu_mgmt:'إدارة القايمة',pause_all:'وقّف الكل',unpause_all:'شغّل الكل',search:'ابحث عن صنف...',available:'متوفر',snoozed:'موقوف',total:'كل الأصناف',tap_note:'اضغط أي صنف تغيّر توفره'}
-};
 
 function getAllItems(){var a=[];MENU.forEach(function(c){c.items.forEach(function(i){a.push(i);});});return a;}
 
-function setLang(lang){
-  LANG=lang;
-  var ar=lang==='ar';
-  document.getElementById('lb-en').classList.toggle('on',!ar);
-  document.getElementById('lb-ar').classList.toggle('on',ar);
-  document.getElementById('page').classList.toggle('rtl-page',ar);
-  document.getElementById('hdr-sub').textContent=T[lang].menu_mgmt;
-  document.getElementById('pause-all-btn').textContent=allPaused?T[lang].unpause_all:T[lang].pause_all;
-  document.getElementById('search-input').placeholder=T[lang].search;
-  document.getElementById('fs-avail-l').textContent=T[lang].available;
-  document.getElementById('fs-snoozed-l').textContent=T[lang].snoozed;
-  document.getElementById('fs-total-l').textContent=T[lang].total;
-  document.getElementById('fs-note').textContent=T[lang].tap_note;
-  renderPlatBar();
-  renderMenu();
-  updateFooter();
-}
 
 function toggleItem(id){
   var item=null;
@@ -175,7 +143,7 @@ function pauseAll(){
   getAllItems().forEach(function(i){i.on=!allPaused;});
   var btn=document.getElementById('pause-all-btn');
   btn.classList.toggle('paused',allPaused);
-  btn.textContent=allPaused?T[LANG].unpause_all:T[LANG].pause_all;
+  btn.textContent=allPaused?'Unpause all items':'Pause all items';
   renderMenu();
   updateFooter();
 }
@@ -194,7 +162,7 @@ function setPlat(key){
 function renderPlatBar(){
   var bar=document.getElementById('plats-bar');
   bar.innerHTML=PLAT_LIST.map(function(p){
-    var lbl=LANG==='ar'?p.label_ar:p.label;
+    var lbl=p.label;
     var isOn=activePlat===p.key;
     return '<button class="plat-chip'+(isOn?' on':'')+'" data-key="'+p.key+'" onclick="setPlat(\''+p.key+'\')" style="'+(isOn?'background:'+p.color+';color:#fff;border-color:'+p.color:'')+'">'+lbl+'</button>';
   }).join('');
@@ -210,14 +178,14 @@ function renderMenu(){
       return true;
     });
     if(!items.length)return;
-    var cname=LANG==='ar'?cat.cat_ar:cat.cat;
+    var cname=cat.cat;
     html+='<div class="cat-section">';
     html+='<div class="cat-header"><span class="cat-name">'+cat.emoji+' '+cname+'</span><span class="cat-count">'+items.length+' items</span></div>';
     html+='<div class="items-grid">';
     items.forEach(function(item){
-      var iname=LANG==='ar'?item.name_ar:item.name;
-      var iname2=LANG==='ar'?item.name:item.name_ar;
-      var statusHtml=item.on?'<span class="item-status avail">'+(LANG==='ar'?'متوفر':'Available')+'</span>':'<span class="item-status snoozed-badge">'+(LANG==='ar'?'موقوف':'Snoozed')+'</span>';
+      var iname=item.name;
+      var iname2=item.name_ar;
+      var statusHtml=item.on?'<span class="item-status avail">Available</span>':'<span class="item-status snoozed-badge">Snoozed</span>';
       var platsHtml=item.plats.map(function(pk){var pl=PLAT_LIST.find(function(x){return x.key===pk;});return pl?'<span class="item-plat-dot" style="background:'+pl.color+'" title="'+pl.label+'"></span>':'';}).join('');
       html+='<div class="item-row'+(item.on?'':' snoozed')+'" onclick="toggleItem('+item.id+')">';
       html+='<span class="item-emoji">'+cat.emoji+'</span>';
