@@ -6,159 +6,174 @@
 <title>OrderOne — Manager Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+/* DARK MODE (default) */
 :root{
   --bg:#0a0a0a;--s1:#111;--s2:#171717;--s3:#1e1e1e;
   --b1:#1e1e1e;--b2:#272727;--b3:#313131;
-  --t1:#f0ede8;--t2:#666;--t3:#2e2e2e;
+  --t1:#f0ede8;--t2:#666;--t3:#333;
   --orange:#FF6B35;--yellow:#F5C400;--greenp:#4CAF72;
   --pink:#FF2D55;--teal:#00CCBC;--purple:#A855F7;
   --green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+  --card:var(--s1);
+}
+/* LIGHT MODE */
+body.light{
+  --bg:#f5f5f5;--s1:#fff;--s2:#f0f0f0;--s3:#e8e8e8;
+  --b1:#e0e0e0;--b2:#d0d0d0;--b3:#c0c0c0;
+  --t1:#0f0f0d;--t2:#666;--t3:#999;
+  --card:#fff;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;transition:background .3s,color .3s}
 
-/* NAV */
-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--b1);position:sticky;top:0;background:var(--bg);z-index:100;flex-wrap:wrap;gap:10px}
-.brand{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:-.5px}
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid var(--b1);position:sticky;top:0;background:var(--bg);z-index:100;flex-wrap:wrap;gap:8px;transition:background .3s}
+.brand{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;letter-spacing:-.5px;color:var(--t1)}
 .brand em{color:var(--orange);font-style:normal}
-.nav-right{display:flex;align-items:center;gap:12px}
-.live-pill{display:flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--b2);border-radius:20px;padding:5px 12px;font-size:11px;color:var(--green);font-family:'DM Mono',monospace}
-.ldot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
+.brand-sub{font-size:11px;font-weight:400;color:var(--t2);margin-left:4px}
+.nav-center{display:flex;gap:2px;background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:3px}
+.ntab{padding:6px 14px;border-radius:7px;border:none;background:transparent;color:var(--t2);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.ntab.on{background:var(--s3);color:var(--t1);border:1px solid var(--b3);font-weight:500}
+.nav-right{display:flex;align-items:center;gap:8px}
+.icon-btn{background:var(--s2);border:1px solid var(--b2);border-radius:8px;color:var(--t2);font-size:14px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.icon-btn:hover{color:var(--t1)}
+.live-pill{display:flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--b2);border-radius:20px;padding:5px 11px;font-size:10px;color:var(--green);font-family:'DM Mono',monospace}
+.ldot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.nav-tabs{display:flex;gap:2px;background:var(--s2);border:1px solid var(--b2);border-radius:10px;padding:3px}
-.ntab{padding:7px 16px;border-radius:7px;border:none;background:transparent;color:var(--t2);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .15s;white-space:nowrap}
-.ntab.on{background:var(--s3);color:var(--t1);border:1px solid var(--b3)}
 
-/* PANELS */
-.panel{display:none;padding:24px 28px;max-width:1100px;margin:0 auto}
+.panel{display:none;padding:20px 24px;max-width:1100px;margin:0 auto}
 .panel.on{display:block}
-
-/* SECTION LABEL */
-.sec-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);margin-bottom:12px}
+.sl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--t3);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sl::after{content:'';flex:1;height:1px;background:var(--b1)}
 
 /* METRICS */
-.metrics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
-.metric{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:18px}
-.metric-n{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;line-height:1;margin-bottom:5px}
-.metric-l{font-size:11px;color:var(--t3);font-family:'DM Mono',monospace}
-.metric-d{font-size:11px;margin-top:6px}
+.mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:20px}
+.mc{background:var(--card);border:1px solid var(--b1);border-radius:12px;padding:16px;transition:background .3s}
+.mn{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1;margin-bottom:4px;color:var(--t1)}
+.ml{font-size:11px;color:var(--t2);font-family:'DM Mono',monospace}
+.md{font-size:11px;margin-top:5px}
 .up{color:var(--green)}.dn{color:var(--red)}
 
 /* CHARTS */
-.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:20px}
+.charts-row{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:18px}
 @media(max-width:700px){.charts-row{grid-template-columns:1fr}}
-.chart-card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:18px}
-.chart-title{font-size:13px;font-weight:500;margin-bottom:14px;color:var(--t1)}
-.bar-chart-wrap{display:flex;align-items:flex-end;gap:5px;height:80px}
-.bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.cc{background:var(--card);border:1px solid var(--b1);border-radius:12px;padding:16px;transition:background .3s}
+.ct{font-size:13px;font-weight:500;margin-bottom:12px;color:var(--t1)}
+.bar-wrap{display:flex;align-items:flex-end;gap:4px;height:72px}
+.bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
 .bbar{border-radius:3px 3px 0 0;width:100%;min-height:3px}
 .blbl{font-size:8px;color:var(--t3);font-family:'DM Mono',monospace}
-.bval{font-size:8px;color:var(--t2);font-family:'DM Mono',monospace}
-.pp-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.pp-name{font-size:12px;min-width:84px}
+.bval{font-size:8px;color:var(--t2)}
+.pp-row{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.pp-row:last-child{margin-bottom:0}
+.pp-name{font-size:12px;min-width:80px;color:var(--t1)}
 .pp-track{flex:1;height:5px;background:var(--b2);border-radius:3px;overflow:hidden}
 .pp-fill{height:100%;border-radius:3px}
 .pp-pct{font-size:11px;color:var(--t2);font-family:'DM Mono',monospace;min-width:30px;text-align:right}
 
 /* LIVE ORDERS */
-.live-orders{display:flex;flex-direction:column;gap:7px;margin-bottom:20px}
-.lord{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px}
-.lord.ready{border-color:#0d2e0d;background:#060e06}
-.lord-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.lord-num{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;flex:1}
+.lo-list{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.lord{background:var(--card);border:1px solid var(--b1);border-radius:10px;padding:11px 13px;display:flex;align-items:center;gap:10px;transition:background .3s}
+.lord.ready{border-color:#166534;background:#052e16}
+body.light .lord.ready{border-color:#86efac;background:#f0fff4}
+.lord-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.lord-num{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;flex:1;color:var(--t1)}
 .lord-plat{font-size:11px;font-family:'DM Mono',monospace}
-.lord-status{font-size:10px;padding:3px 9px;border-radius:20px;font-family:'DM Mono',monospace}
+.lord-status{font-size:10px;padding:3px 8px;border-radius:20px;font-family:'DM Mono',monospace}
 .lord-status.prep{background:var(--s3);color:var(--t2)}
-.lord-status.ready{background:#051205;color:var(--green)}
-.lord-age{font-size:10px;color:var(--t3);font-family:'DM Mono',monospace;margin-left:auto}
+.lord-status.ready-s{background:#052e16;color:var(--green)}
+body.light .lord-status.ready-s{background:#dcfce7;color:#15803d}
+.lord-age{font-size:10px;color:var(--t2);font-family:'DM Mono',monospace;margin-left:auto}
 
 /* BEST SELLERS */
-.bs-list{display:flex;flex-direction:column;gap:7px}
-.bs-row{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px}
-.bs-rank{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--t3);min-width:22px}
-.bs-name{font-size:13px;flex:1}
+.bs-list{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.bs-row{background:var(--card);border:1px solid var(--b1);border-radius:10px;padding:11px 13px;display:flex;align-items:center;gap:10px;transition:background .3s}
+.bs-rank{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--t3);min-width:20px}
+.bs-name{font-size:13px;flex:1;color:var(--t1)}
 .bs-ct{font-size:12px;color:var(--t2);font-family:'DM Mono',monospace}
 .bs-rev{font-size:12px;color:var(--green);font-family:'DM Mono',monospace}
 
 /* ALERTS */
-.alerts{display:flex;flex-direction:column;gap:8px}
-.alert{border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:10px;font-size:13px}
-.alert.warn{background:#1a0d00;border:1px solid #3d2200;color:var(--amber)}
-.alert.info{background:#070a1a;border:1px solid #151a3a;color:#60a5fa}
-.alert.ok{background:#051208;border:1px solid #0a2a0a;color:var(--green)}
+.alerts{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
+.alert{border-radius:9px;padding:10px 13px;display:flex;align-items:center;gap:9px;font-size:13px;color:var(--t1)}
+.alert.warn{background:#1a0d00;border:1px solid #3d2200}
+body.light .alert.warn{background:#fffbeb;border-color:#fde68a;color:#92400e}
+.alert.info{background:#070a1a;border:1px solid #151a3a}
+body.light .alert.info{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
+.alert.ok{background:#052e16;border:1px solid #166534}
+body.light .alert.ok{background:#f0fdf4;border-color:#86efac;color:#15803d}
 .alert-icon{font-size:14px;flex-shrink:0}
 
+/* BUSY TOGGLE */
+.busy-big{width:100%;padding:13px;border-radius:10px;border:1px solid var(--b2);background:var(--s2);color:var(--amber);font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;margin-bottom:16px}
+.busy-big.on{background:#1a0800;border-color:#4d2200;color:var(--red)}
+body.light .busy-big.on{background:#fff3e0;border-color:#ffcc80;color:#b45309}
+
 /* SETTINGS */
-.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:600px){.settings-grid{grid-template-columns:1fr}}
-.setting-card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:18px}
-.setting-title{font-size:14px;font-weight:500;margin-bottom:6px}
-.setting-sub{font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.5}
-.setting-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b1)}
-.setting-row:last-child{border-bottom:none}
-.setting-name{font-size:13px}
+.sc{background:var(--card);border:1px solid var(--b1);border-radius:12px;padding:16px;transition:background .3s}
+.sc-title{font-size:14px;font-weight:600;margin-bottom:4px;color:var(--t1)}
+.sc-sub{font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.5}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b1)}
+.setting-row:last-child{border-bottom:none;padding-bottom:0}
+.setting-name{font-size:13px;color:var(--t1)}
 .tog{width:40px;height:22px;border-radius:11px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
 .tog.on{background:var(--green)}.tog.off{background:var(--b3)}
 .tog::after{content:'';position:absolute;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s}
 .tog.on::after{left:20px}.tog.off::after{left:2px}
-.platform-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b1)}
-.platform-row:last-child{border-bottom:none}
-.plat-dot-s{width:8px;height:8px;border-radius:50%}
-.plat-name-s{font-size:13px;flex:1}
-.plat-status{font-size:11px;font-family:'DM Mono',monospace}
-.plat-status.connected{color:var(--green)}
-.plat-status.pending{color:var(--amber)}
+.plat-row{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--b1)}
+.plat-row:last-child{border-bottom:none;padding-bottom:0}
+.plat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.plat-name{font-size:13px;flex:1;color:var(--t1)}
+.plat-status{font-size:11px;font-family:'DM Mono',monospace;padding:3px 8px;border-radius:20px}
+.plat-status.pending{background:#1a0d00;color:var(--amber)}
+body.light .plat-status.pending{background:#fffbeb;color:#b45309}
+.plat-status.connected{background:#052e16;color:var(--green)}
+body.light .plat-status.connected{background:#dcfce7;color:#15803d}
 
-/* BUSY */
-.busy-toggle-big{width:100%;padding:14px;border-radius:12px;border:1px solid var(--b2);background:var(--s2);color:var(--amber);font-family:'Syne',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;margin-bottom:20px}
-.busy-toggle-big.on{background:#1a0800;border-color:#4d2200;color:var(--red)}
+/* SLIDER */
+.slider-row{display:flex;align-items:center;gap:12px;margin-top:10px}
+input[type=range]{flex:1;accent-color:var(--orange)}
+.slider-val{font-family:'DM Mono',monospace;font-size:13px;min-width:50px;color:var(--t1)}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="brand">Order<em>One</em> <span style="font-size:12px;font-weight:400;color:var(--t2);font-family:'DM Sans',sans-serif">Manager</span></div>
-  <div class="nav-tabs">
+  <div class="brand">Order<em>One</em><span class="brand-sub">Manager</span></div>
+  <div class="nav-center">
     <button class="ntab on" id="nt-dash" onclick="switchTab('dash')">Dashboard</button>
     <button class="ntab" id="nt-orders" onclick="switchTab('orders')">Live orders</button>
     <button class="ntab" id="nt-settings" onclick="switchTab('settings')">Settings</button>
   </div>
   <div class="nav-right">
-    <div class="live-pill"><span class="ldot"></span>All platforms live</div>
+    <button class="icon-btn" onclick="refreshDash()" title="Refresh">↻</button>
+    <button class="icon-btn" id="mode-btn" onclick="toggleMode()" title="Toggle mode">🌙</button>
+    <div class="live-pill"><span class="ldot"></span>Live</div>
   </div>
 </nav>
 
 <!-- DASHBOARD -->
 <div class="panel on" id="p-dash">
-  <div class="sec-lbl" style="margin-top:4px">Today's performance — <span id="dash-date"></span></div>
-
-  <div class="metrics-grid">
-    <div class="metric"><div class="metric-n">47</div><div class="metric-l">Total orders</div><div class="metric-d up">↑ 12% vs yesterday</div></div>
-    <div class="metric"><div class="metric-n" style="font-size:24px">AED 8,240</div><div class="metric-l">Revenue</div><div class="metric-d up">↑ 8% vs yesterday</div></div>
-    <div class="metric"><div class="metric-n">14m</div><div class="metric-l">Avg prep time</div><div class="metric-d dn">↑ 2m slower</div></div>
-    <div class="metric"><div class="metric-n" style="color:var(--green)">98%</div><div class="metric-l">Order accuracy</div><div class="metric-d up">↑ Great</div></div>
+  <div class="sl" style="margin-top:4px">Today — <span id="dash-date"></span></div>
+  <div class="mg">
+    <div class="mc"><div class="mn">47</div><div class="ml">Total orders</div><div class="md up">↑ 12% vs yesterday</div></div>
+    <div class="mc"><div class="mn" style="font-size:22px">AED 8,240</div><div class="ml">Revenue</div><div class="md up">↑ 8% vs yesterday</div></div>
+    <div class="mc"><div class="mn">14m</div><div class="ml">Avg prep time</div><div class="md dn">↑ 2m slower</div></div>
+    <div class="mc"><div class="mn" style="color:var(--green)">98%</div><div class="ml">Order accuracy</div><div class="md up">↑ Great</div></div>
   </div>
-
   <div class="charts-row">
-    <div class="chart-card">
-      <div class="chart-title">Orders by hour today</div>
-      <div class="bar-chart-wrap" id="bar-chart"></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">By platform</div>
-      <div id="plat-perf"></div>
-    </div>
+    <div class="cc"><div class="ct">Orders by hour</div><div class="bar-wrap" id="bar-chart"></div></div>
+    <div class="cc"><div class="ct">By platform</div><div id="plat-perf"></div></div>
   </div>
-
-  <div class="sec-lbl">Best sellers today</div>
-  <div class="bs-list" style="margin-bottom:20px">
+  <div class="sl">Best sellers today</div>
+  <div class="bs-list">
     <div class="bs-row"><span class="bs-rank">1</span><span class="bs-name">Smash Burger</span><span class="bs-ct">18x</span><span class="bs-rev">AED 756</span></div>
     <div class="bs-row"><span class="bs-rank">2</span><span class="bs-name">Loaded Fries</span><span class="bs-ct">14x</span><span class="bs-rev">AED 308</span></div>
     <div class="bs-row"><span class="bs-rank">3</span><span class="bs-name">Double Cheese</span><span class="bs-ct">11x</span><span class="bs-rev">AED 572</span></div>
     <div class="bs-row"><span class="bs-rank">4</span><span class="bs-name">Lemonade</span><span class="bs-ct">9x</span><span class="bs-rev">AED 144</span></div>
   </div>
-
-  <div class="sec-lbl">Alerts</div>
+  <div class="sl">Alerts</div>
   <div class="alerts">
     <div class="alert warn"><span class="alert-icon">⚠</span>Crispy Chicken is snoozed — update menu when restocked</div>
     <div class="alert info"><span class="alert-icon">ℹ</span>Talabat integration last synced 12 seconds ago</div>
@@ -168,61 +183,74 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 2
 
 <!-- LIVE ORDERS -->
 <div class="panel" id="p-orders">
-  <button class="busy-toggle-big" id="busy-big-btn" onclick="toggleBusyBig()">Pause all incoming orders (Busy mode)</button>
-
-  <div class="sec-lbl">Active orders right now</div>
-  <div class="live-orders" id="live-orders-list"></div>
+  <button class="busy-big" id="busy-big-btn" onclick="toggleBusyBig()">Pause all incoming orders (Busy mode)</button>
+  <div class="sl">Active orders right now</div>
+  <div class="lo-list" id="lo-list"></div>
 </div>
 
 <!-- SETTINGS -->
 <div class="panel" id="p-settings">
   <div class="settings-grid">
-    <div class="setting-card">
-      <div class="setting-title">Platform integrations</div>
-      <div class="setting-sub">Status of each delivery platform connection</div>
-      <div class="platform-row"><span class="plat-dot-s" style="background:#FF6B35"></span><span class="plat-name-s">Talabat</span><span class="plat-status pending">Pending API</span></div>
-      <div class="platform-row"><span class="plat-dot-s" style="background:#F5C400"></span><span class="plat-name-s">Noon</span><span class="plat-status pending">Pending API</span></div>
-      <div class="platform-row"><span class="plat-dot-s" style="background:#4CAF72"></span><span class="plat-name-s">Careem</span><span class="plat-status pending">Pending API</span></div>
-      <div class="platform-row"><span class="plat-dot-s" style="background:#00CCBC"></span><span class="plat-name-s">Deliveroo</span><span class="plat-status pending">Pending API</span></div>
-      <div class="platform-row"><span class="plat-dot-s" style="background:#FF2D55"></span><span class="plat-name-s">HungerStation</span><span class="plat-status pending">Pending API</span></div>
+    <div class="sc">
+      <div class="sc-title">Platform integrations</div>
+      <div class="sc-sub">Connect your delivery platforms via API</div>
+      <div class="plat-row"><span class="plat-dot" style="background:#FF6B35"></span><span class="plat-name">Talabat</span><span class="plat-status pending">Pending API</span></div>
+      <div class="plat-row"><span class="plat-dot" style="background:#d4a800"></span><span class="plat-name">Noon</span><span class="plat-status pending">Pending API</span></div>
+      <div class="plat-row"><span class="plat-dot" style="background:#4CAF72"></span><span class="plat-name">Careem</span><span class="plat-status pending">Pending API</span></div>
+      <div class="plat-row"><span class="plat-dot" style="background:#00CCBC"></span><span class="plat-name">Deliveroo</span><span class="plat-status pending">Pending API</span></div>
+      <div class="plat-row"><span class="plat-dot" style="background:#FF2D55"></span><span class="plat-name">HungerStation</span><span class="plat-status pending">Pending API</span></div>
     </div>
-    <div class="setting-card">
-      <div class="setting-title">Notifications</div>
-      <div class="setting-sub">Control what alerts you receive on this device</div>
-      <div class="setting-row"><span class="setting-name">New order alert</span><button class="tog on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
+    <div class="sc">
+      <div class="sc-title">Notifications</div>
+      <div class="sc-sub">Control alerts on this device</div>
+      <div class="setting-row"><span class="setting-name">New order sound</span><button class="tog on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
       <div class="setting-row"><span class="setting-name">Order ready alert</span><button class="tog on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
       <div class="setting-row"><span class="setting-name">Expired order alert</span><button class="tog on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
       <div class="setting-row"><span class="setting-name">Platform offline alert</span><button class="tog on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
     </div>
-    <div class="setting-card">
-      <div class="setting-title">Auto-cancel timer</div>
-      <div class="setting-sub">How long before a ready order is auto-cancelled if driver doesn't collect</div>
-      <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
-        <input type="range" min="5" max="30" value="15" id="timer-slider" style="flex:1" oninput="document.getElementById('timer-val').textContent=this.value+' min'">
-        <span id="timer-val" style="font-family:'DM Mono',monospace;font-size:13px;min-width:50px">15 min</span>
+    <div class="sc">
+      <div class="sc-title">Auto-cancel timer</div>
+      <div class="sc-sub">How long before a ready order is auto-cancelled if driver doesn't collect</div>
+      <div class="slider-row">
+        <input type="range" min="5" max="30" value="15" id="timer-slider" oninput="document.getElementById('timer-val').textContent=this.value+' min'">
+        <span class="slider-val" id="timer-val">15 min</span>
       </div>
     </div>
-    <div class="setting-card">
-      <div class="setting-title">Pickup screen</div>
-      <div class="setting-sub">Settings for the outside driver screen</div>
-      <div class="setting-row"><span class="setting-name">Show wait times</span><button class="tog on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
-      <div class="setting-row"><span class="setting-name">Show platform logos</span><button class="tog on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
-      <div class="setting-row"><span class="setting-name">Arabic on screen</span><button class="tog off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
+    <div class="sc">
+      <div class="sc-title">Pickup screen</div>
+      <div class="sc-sub">Settings for the outside driver screen</div>
+      <div class="setting-row"><span class="setting-name">Show estimated wait times</span><button class="tog on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
+      <div class="setting-row"><span class="setting-name">Show platform name</span><button class="tog on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
+      <div class="setting-row"><span class="setting-name">Sound when order ready</span><button class="tog off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
     </div>
   </div>
 </div>
 
 <script>
 var orders=[
-  {id:1,num:'#1038',plat:'talabat',status:'ready',at:Date.now()-420000,color:'#FF6B35'},
-  {id:2,num:'#2051',plat:'noon',status:'preparing',at:Date.now()-300000,color:'#F5C400'},
-  {id:3,num:'#3017',plat:'careem',status:'preparing',at:Date.now()-180000,color:'#4CAF72'},
-  {id:4,num:'#5002',plat:'deliveroo',status:'preparing',at:Date.now()-90000,color:'#00CCBC'},
-  {id:5,num:'#6011',plat:'hungerstation',status:'ready',at:Date.now()-500000,color:'#FF2D55'}
+  {id:1,num:'#1038',plat:'Talabat',status:'ready',at:Date.now()-420000,color:'#FF6B35'},
+  {id:2,num:'#2051',plat:'Noon',status:'preparing',at:Date.now()-300000,color:'#d4a800'},
+  {id:3,num:'#3017',plat:'Careem',status:'preparing',at:Date.now()-180000,color:'#4CAF72'},
+  {id:4,num:'#5002',plat:'Deliveroo',status:'preparing',at:Date.now()-90000,color:'#00CCBC'},
+  {id:5,num:'#6011',plat:'HungerStation',status:'ready',at:Date.now()-500000,color:'#FF2D55'}
 ];
-var busyBig=false;
+var busyBig=false,darkMode=true;
 
 function ago(ts){var m=Math.floor((Date.now()-ts)/60000);return m<1?'just now':m+'m ago';}
+
+function toggleMode(){
+  darkMode=!darkMode;
+  document.body.classList.toggle('light',!darkMode);
+  document.getElementById('mode-btn').textContent=darkMode?'🌙':'☀️';
+}
+
+function refreshDash(){
+  renderLiveOrders();
+  var btn=document.querySelector('.icon-btn');
+  btn.style.transform='rotate(360deg)';
+  btn.style.transition='transform .4s';
+  setTimeout(function(){btn.style.transform='';btn.style.transition='';},400);
+}
 
 function switchTab(t){
   ['dash','orders','settings'].forEach(function(id){
@@ -245,12 +273,12 @@ function renderLiveOrders(){
     html+='<div class="lord'+(isR?' ready':'')+'">';
     html+='<span class="lord-dot" style="background:'+o.color+'"></span>';
     html+='<span class="lord-num" style="color:'+o.color+'">'+o.num+'</span>';
-    html+='<span class="lord-plat" style="color:'+o.color+'">'+o.plat.charAt(0).toUpperCase()+o.plat.slice(1)+'</span>';
-    html+='<span class="lord-status '+(isR?'ready':'prep')+'">'+(isR?'Ready':'Preparing')+'</span>';
+    html+='<span class="lord-plat" style="color:'+o.color+'">'+o.plat+'</span>';
+    html+='<span class="lord-status '+(isR?'ready-s':'prep')+'">'+(isR?'Ready':'Preparing')+'</span>';
     html+='<span class="lord-age">'+ago(o.at)+'</span>';
     html+='</div>';
   });
-  document.getElementById('live-orders-list').innerHTML=html;
+  document.getElementById('lo-list').innerHTML=html;
 }
 
 function renderCharts(){
@@ -259,16 +287,15 @@ function renderCharts(){
   var max=Math.max.apply(null,vals);
   var bh='';
   hours.forEach(function(h,i){
-    var ht=Math.round((vals[i]/max)*68);
-    bh+='<div class="bcol"><div class="bval">'+vals[i]+'</div><div class="bbar" style="height:'+ht+'px;background:var(--orange);opacity:'+(0.35+vals[i]/max*0.65).toFixed(2)+'"></div><div class="blbl">'+h+'</div></div>';
+    var ht=Math.round((vals[i]/max)*64);
+    bh+='<div class="bcol"><div class="bval">'+vals[i]+'</div><div class="bbar" style="height:'+ht+'px;background:#FF6B35;opacity:'+(0.3+vals[i]/max*0.7).toFixed(2)+'"></div><div class="blbl">'+h+'</div></div>';
   });
   document.getElementById('bar-chart').innerHTML=bh;
-
   var platData=[
     {name:'Talabat',pct:42,color:'#FF6B35'},
     {name:'Deliveroo',pct:32,color:'#00CCBC'},
     {name:'Careem',pct:18,color:'#4CAF72'},
-    {name:'Noon',pct:8,color:'#F5C400'}
+    {name:'Noon',pct:8,color:'#d4a800'}
   ];
   var ph='';
   platData.forEach(function(p){
@@ -279,7 +306,6 @@ function renderCharts(){
 
 var now=new Date();
 document.getElementById('dash-date').textContent=now.toLocaleDateString('en-AE',{weekday:'long',day:'numeric',month:'long'});
-
 renderCharts();
 renderLiveOrders();
 setInterval(renderLiveOrders,30000);

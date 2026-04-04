@@ -6,44 +6,56 @@
 <title>OrderOne — Pickup Screen</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* DARK MODE (default) */
 :root{
-  --orange:#FF6B35;--yellow:#F5C400;--greenp:#4CAF72;
-  --pink:#FF2D55;--teal:#00CCBC;--purple:#A855F7;
+  --bg:#060606;--card:#0e0e0e;--border:#1a1a1a;
+  --t1:#ffffff;--t2:#333;--t3:#1e1e1e;
   --green:#22c55e;
 }
+/* LIGHT MODE */
+body.light{
+  --bg:#f8fafc;--card:#ffffff;--border:#e2e8f0;
+  --t1:#0f172a;--t2:#94a3b8;--t3:#e2e8f0;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#060606;color:#fff;font-family:'DM Mono',monospace;min-height:100vh;display:flex;flex-direction:column}
+body{background:var(--bg);color:var(--t1);font-family:'DM Mono',monospace;min-height:100vh;display:flex;flex-direction:column;transition:background .3s}
 
-header{display:flex;align-items:center;justify-content:space-between;padding:24px 44px 20px;border-bottom:1px solid #0f0f0f;flex-shrink:0}
+header{display:flex;align-items:center;justify-content:space-between;padding:20px 40px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
 .hdr-left{}
-.hdr-title{font-family:'Syne',sans-serif;font-size:clamp(22px,3vw,38px);font-weight:800;letter-spacing:-1px;color:#fff}
-.hdr-sub{font-size:clamp(10px,1.2vw,14px);color:#2e2e2e;margin-top:4px;letter-spacing:.04em}
-.hdr-right{display:flex;align-items:center;gap:20px}
-.clock{font-family:'Syne',sans-serif;font-size:clamp(20px,2.5vw,34px);font-weight:700;color:#1e1e1e;letter-spacing:-.5px}
-.brand{font-family:'Syne',sans-serif;font-size:clamp(13px,1.5vw,17px);font-weight:800;color:#161616}
+.hdr-title{font-family:'Syne',sans-serif;font-size:clamp(20px,3vw,36px);font-weight:800;letter-spacing:-1px;color:var(--t1)}
+.hdr-sub{font-size:clamp(9px,1vw,12px);color:var(--t2);margin-top:4px;letter-spacing:.06em}
+.hdr-right{display:flex;align-items:center;gap:16px}
+.clock{font-family:'Syne',sans-serif;font-size:clamp(18px,2.5vw,32px);font-weight:700;color:var(--t2);letter-spacing:-.5px}
+.brand{font-family:'Syne',sans-serif;font-size:clamp(13px,1.5vw,17px);font-weight:800;color:var(--t2)}
 .brand em{color:#FF6B35;font-style:normal}
+.hdr-btns{display:flex;gap:6px}
+.hbtn{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--t2);font-size:13px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.hbtn:hover{color:var(--t1)}
 
-main{flex:1;padding:28px 44px;overflow:hidden}
-.sec-label{font-size:clamp(8px,.9vw,10px);font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#202020;margin-bottom:14px}
+main{flex:1;padding:24px 40px;overflow:hidden}
+.sec-label{font-size:clamp(8px,.9vw,10px);font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--t2);margin-bottom:12px}
 
-.ready-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:36px}
-.rtile{background:#0e0e0e;border:1px solid #161616;border-radius:18px;padding:20px 18px;animation:pop .28s cubic-bezier(.34,1.56,.64,1)}
+/* READY TILES - fixed to not cut off numbers */
+.ready-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:32px}
+.rtile{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 14px;animation:pop .28s cubic-bezier(.34,1.56,.64,1)}
 @keyframes pop{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
-.tile-plat{display:flex;align-items:center;gap:6px;font-size:clamp(10px,1vw,12px);font-weight:500;margin-bottom:10px}
+.tile-plat{display:flex;align-items:center;gap:6px;font-size:clamp(10px,1vw,12px);font-weight:500;margin-bottom:8px;color:var(--t1)}
 .tile-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.tile-num{font-family:'Syne',sans-serif;font-size:clamp(36px,5vw,54px);font-weight:800;line-height:1;margin-bottom:8px;letter-spacing:-2px}
-.tile-badge{display:inline-block;font-size:clamp(8px,.8vw,10px);padding:4px 10px;border-radius:20px;background:#061206;color:var(--green);letter-spacing:.06em}
+/* Key fix: number won't get cut off */
+.tile-num{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.1;margin-bottom:8px;letter-spacing:-1px;word-break:break-all;overflow-wrap:break-word}
+.tile-badge{display:inline-block;font-size:clamp(8px,.8vw,10px);padding:4px 10px;border-radius:20px;background:#052e16;color:var(--green);letter-spacing:.06em}
+body.light .tile-badge{background:#dcfce7;color:#15803d}
 
-.prep-section{border-top:1px solid #0f0f0f;padding-top:24px}
-.prep-chips{display:flex;gap:10px;flex-wrap:wrap}
-.pchip{background:#090909;border:1px solid #131313;border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:8px}
+.prep-section{border-top:1px solid var(--border);padding-top:20px}
+.prep-chips{display:flex;gap:8px;flex-wrap:wrap}
+.pchip{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 14px;display:flex;align-items:center;gap:7px}
 .pchip-dot{width:6px;height:6px;border-radius:50%}
-.pchip-num{font-family:'Syne',sans-serif;font-size:clamp(13px,1.4vw,16px);font-weight:800;color:#333}
-.pchip-info{font-size:clamp(9px,.9vw,11px);color:#222}
+.pchip-num{font-family:'Syne',sans-serif;font-size:clamp(12px,1.3vw,15px);font-weight:800;color:var(--t2)}
+.pchip-info{font-size:clamp(9px,.9vw,11px);color:var(--t2)}
 
-.empty-msg{text-align:center;padding:80px 0;font-family:'Syne',sans-serif;font-size:clamp(14px,2vw,22px);font-weight:700;color:#141414}
+.empty-msg{text-align:center;padding:60px 0;font-family:'Syne',sans-serif;font-size:clamp(14px,2vw,20px);font-weight:700;color:var(--t2)}
 
-footer{padding:10px 44px;border-top:1px solid #0d0d0d;display:flex;justify-content:space-between;font-size:clamp(8px,.8vw,10px);color:#181818;letter-spacing:.06em;flex-shrink:0}
+footer{padding:8px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:clamp(8px,.8vw,10px);color:var(--t2);letter-spacing:.06em;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -54,17 +66,20 @@ footer{padding:10px 44px;border-top:1px solid #0d0d0d;display:flex;justify-conte
     <div class="hdr-sub">DRIVERS — WAIT OUTSIDE UNTIL YOUR NUMBER APPEARS BELOW</div>
   </div>
   <div class="hdr-right">
+    <div class="hdr-btns">
+      <button class="hbtn" onclick="refreshScreen()" title="Refresh">↻</button>
+      <button class="hbtn" id="mode-btn" onclick="toggleMode()" title="Toggle mode">🌙</button>
+    </div>
     <div class="clock" id="clock">--:--</div>
     <div class="brand">Order<em>One</em></div>
   </div>
 </header>
 
 <main>
-  <div class="sec-label" id="ready-lbl">Ready for collection now</div>
+  <div class="sec-label">Ready for collection now</div>
   <div class="ready-grid" id="ready-grid"></div>
-
   <div class="prep-section">
-    <div class="sec-label" id="prep-lbl">Being prepared — your order is on its way</div>
+    <div class="sec-label">Being prepared — your order is on its way</div>
     <div class="prep-chips" id="prep-chips"></div>
     <div class="empty-msg" id="empty-msg" style="display:none">No active orders right now</div>
   </div>
@@ -79,7 +94,7 @@ footer{padding:10px 44px;border-top:1px solid #0d0d0d;display:flex;justify-conte
 <script>
 var PLAT={
   talabat:{label:'Talabat',color:'#FF6B35'},
-  noon:{label:'Noon',color:'#F5C400'},
+  noon:{label:'Noon',color:'#d4a800'},
   careem:{label:'Careem',color:'#4CAF72'},
   hungerstation:{label:'HungerStation',color:'#FF2D55'},
   deliveroo:{label:'Deliveroo',color:'#00CCBC'},
@@ -94,8 +109,23 @@ var orders=[
   {id:5,num:'#5002',plat:'deliveroo',status:'preparing',at:Date.now()-90000},
   {id:6,num:'#6011',plat:'hungerstation',status:'ready',at:Date.now()-500000}
 ];
+var darkMode=true;
 
-function waitEst(o){var m=Math.floor((Date.now()-o.at)/60000);return'~'+Math.max(2,15-m)+'m';}
+function toggleMode(){
+  darkMode=!darkMode;
+  document.body.classList.toggle('light',!darkMode);
+  document.getElementById('mode-btn').textContent=darkMode?'🌙':'☀️';
+}
+
+function refreshScreen(){
+  render();
+  var btn=document.querySelector('.hbtn');
+  btn.style.transform='rotate(360deg)';
+  btn.style.transition='transform .4s';
+  setTimeout(function(){btn.style.transform='';btn.style.transition='';},400);
+}
+
+function waitEst(o){return'~'+Math.max(2,15-Math.floor((Date.now()-o.at)/60000))+'m';}
 
 function render(){
   var ready=orders.filter(function(o){return o.status==='ready';});
@@ -103,7 +133,11 @@ function render(){
   var rh='';
   ready.forEach(function(o){
     var p=PLAT[o.plat];
-    rh+='<div class="rtile"><div class="tile-plat" style="color:'+p.color+'"><span class="tile-dot" style="background:'+p.color+'"></span>'+p.label+'</div><div class="tile-num" style="color:'+p.color+'">'+o.num+'</div><span class="tile-badge">Come collect</span></div>';
+    rh+='<div class="rtile">';
+    rh+='<div class="tile-plat" style="color:'+p.color+'"><span class="tile-dot" style="background:'+p.color+'"></span>'+p.label+'</div>';
+    rh+='<div class="tile-num" style="color:'+p.color+'">'+o.num+'</div>';
+    rh+='<span class="tile-badge">Come collect</span>';
+    rh+='</div>';
   });
   document.getElementById('ready-grid').innerHTML=rh;
   var ph='';
@@ -117,10 +151,8 @@ function render(){
 
 function tick(){
   var n=new Date(),pad=function(x){return x<10?'0'+x:x;};
-  var t=pad(n.getHours())+':'+pad(n.getMinutes());
-  var tf=t+':'+pad(n.getSeconds());
-  document.getElementById('clock').textContent=t;
-  document.getElementById('footer-time').textContent=tf;
+  document.getElementById('clock').textContent=pad(n.getHours())+':'+pad(n.getMinutes());
+  document.getElementById('footer-time').textContent=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());
 }
 
 render();tick();
