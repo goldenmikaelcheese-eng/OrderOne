@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OrderOne — The Pitch</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ef;--ink:#0f0f0d;--ink2:#555;--ink3:#999;--accent:#FF6B35;--card:#fff;--border:#e8e4dc;--talabat:#FF6B35;--noon:#D4B800;--careem:#4CAF72;--hunger:#FF2D55;--deliveroo:#00CCBC;--insta:#A855F7;--green:#22c55e}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:80px 64px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 39px,var(--border) 39px,var(--border) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,var(--border) 39px,var(--border) 40px);opacity:.45}
+.hc{position:relative;z-index:1}
+.hero-tag{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;margin-bottom:28px;opacity:0;animation:fadeUp .6s .1s forwards}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(52px,9vw,120px);font-weight:800;line-height:.93;letter-spacing:-4px;margin-bottom:32px;opacity:0;animation:fadeUp .6s .2s forwards}
+.hero-title span{color:var(--accent)}
+.hero-sub{font-size:clamp(16px,2vw,21px);font-weight:300;color:var(--ink2);max-width:560px;line-height:1.65;margin-bottom:48px;opacity:0;animation:fadeUp .6s .3s forwards}
+.hero-cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeUp .6s .4s forwards}
+.btn-p{background:var(--ink);color:var(--bg);font-family:'Syne',sans-serif;font-weight:700;font-size:14px;padding:14px 28px;border-radius:4px;text-decoration:none;transition:opacity .15s;display:inline-block}
+.btn-p:hover{opacity:.8}
+.btn-g{font-size:14px;color:var(--ink2);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:2px}
+.hero-stats{display:flex;gap:48px;flex-wrap:wrap;margin-top:72px;opacity:0;animation:fadeUp .6s .6s forwards}
+.hn{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;letter-spacing:-1px}
+.hl{font-size:12px;color:var(--ink3);margin-top:2px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+section{padding:96px 64px;border-top:1px solid var(--border)}
+.sl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--ink3);text-transform:uppercase;margin-bottom:48px;display:flex;align-items:center;gap:12px}
+.sl::after{content:'';flex:1;height:1px;background:var(--border)}
+.st{font-family:'Syne',sans-serif;font-size:clamp(30px,4vw,52px);font-weight:800;letter-spacing:-2px;line-height:1.05;margin-bottom:24px}
+.prob-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.dstrip{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:8px}
+.dd{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dn{font-weight:500;flex:1}
+.db{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink3)}
+.ptot{margin-top:8px;padding:16px 18px;background:#fff0eb;border:1px solid #ffd0bc;border-radius:8px;display:flex;justify-content:space-between;align-items:center}
+.ptl{font-size:13px;color:var(--accent);font-weight:500}
+.ptn{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent);letter-spacing:-1px}
+.pt p{font-size:17px;font-weight:300;line-height:1.7;color:var(--ink2);margin-bottom:20px}
+.pt strong{color:var(--ink);font-weight:500}
+.sol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px}
+.sc{background:var(--card);border:1px solid var(--border);padding:32px 28px}
+.sc:first-child{border-radius:12px 0 0 12px}
+.sc:last-child{border-radius:0 12px 12px 0}
+.sn{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:var(--border);letter-spacing:-3px;line-height:1;margin-bottom:16px}
+.stitle{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px;letter-spacing:-.5px}
+.sbody{font-size:14px;color:var(--ink2);line-height:1.6;font-weight:300}
+.flow-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:48px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.fs{padding:32px 24px;border-right:1px solid var(--border);position:relative;background:var(--card)}
+.fs:last-child{border-right:none}
+.fa{position:absolute;right:-14px;top:50%;transform:translateY(-50%);width:28px;height:28px;background:var(--bg);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink3);z-index:2}
+.fs:last-child .fa{display:none}
+.fi{width:40px;height:40px;border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.ftitle{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px;letter-spacing:-.3px}
+.fbody{font-size:13px;color:var(--ink2);line-height:1.55;font-weight:300}
+.fh{background:var(--ink);border-radius:16px;padding:40px;margin-top:48px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.fhl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;color:#555;text-transform:uppercase;margin-bottom:12px}
+.fht{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;color:var(--bg);margin-bottom:14px;line-height:1.1}
+.fhb{font-size:14px;color:#777;line-height:1.65;font-weight:300}
+.fhcards{display:flex;flex-direction:column;gap:10px}
+.fhcard{background:#161616;border:1px solid #222;border-radius:10px;padding:14px 16px}
+.fhcl{font-size:10px;font-family:'DM Mono',monospace;color:#555;margin-bottom:6px;text-transform:uppercase;letter-spacing:.1em}
+.fhct{font-size:13px;color:#999;line-height:1.5}
+.fhct strong{color:#ccc;font-weight:500}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+.fc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px 24px}
+.ficon{font-size:24px;margin-bottom:14px}
+.ftit{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+.fbd{font-size:13px;color:var(--ink2);line-height:1.6;font-weight:300}
+.ftag{display:inline-block;margin-top:10px;font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;border-radius:4px;background:#fff0eb;color:var(--accent);letter-spacing:.06em}
+.ftag.new{background:#f0fdf4;color:var(--green)}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:48px}
+.tc{padding:28px;border-radius:12px;border:1px solid var(--border);background:var(--card)}
+.tc.yes{border-color:#bbf7d0;background:#f0fdf4}
+.tc.no{border-color:#fecaca;background:#fef2f2;opacity:.7}
+.tclbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.tclbl.yes{color:var(--green)}.tclbl.no{color:var(--ink3)}
+.tct{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px;letter-spacing:-.3px}
+.tcb{font-size:14px;color:var(--ink2);line-height:1.6;font-weight:300}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.mc{padding:32px;border:1px solid var(--border);border-radius:12px;background:var(--card)}
+.mn{font-family:'Syne',sans-serif;font-size:44px;font-weight:800;letter-spacing:-2px;margin-bottom:6px;line-height:1}
+.ml{font-size:13px;color:var(--ink2);line-height:1.5}
+.modl{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:48px}
+.modc{padding:32px;border-radius:12px;border:1px solid var(--border);background:var(--card)}
+.modc.dark{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.modtag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:16px}
+.modc.dark .modtag{color:#555}
+.modp{font-family:'Syne',sans-serif;font-size:38px;font-weight:800;letter-spacing:-2px;margin-bottom:6px}
+.mods{font-size:14px;color:var(--ink2);margin-bottom:20px}
+.modc.dark .mods{color:#777}
+.modpts{display:flex;flex-direction:column;gap:10px}
+.modpt{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--ink2);line-height:1.4}
+.modc.dark .modpt{color:#999}
+.mck{width:16px;height:16px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:700}
+.modc.dark .mck{background:#333}
+.ctable{width:100%;border-collapse:collapse;margin-top:48px;font-size:14px}
+.ctable th{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);font-weight:400;padding:12px 20px;text-align:left;border-bottom:1px solid var(--border)}
+.ctable td{padding:15px 20px;border-bottom:1px solid var(--border);color:var(--ink2);vertical-align:middle}
+.ctable tr.us td{background:#fff8f5;color:var(--ink);font-weight:500}
+.ctable tr.us td:first-child{color:var(--accent)}
+.yes{color:var(--green);font-weight:500}.no{color:#ccc}.partial{color:#f59e0b}
+.stepslist{margin-top:48px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.steprow{display:flex;align-items:flex-start;gap:24px;padding:28px 32px;border-bottom:1px solid var(--border);background:var(--card);transition:background .15s}
+.steprow:last-child{border-bottom:none}
+.steprow:hover{background:#fafaf8}
+.stepn{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--border);min-width:28px;padding-top:3px}
+.steptitle{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;letter-spacing:-.3px;margin-bottom:6px}
+.stepbody{font-size:14px;color:var(--ink2);line-height:1.55;font-weight:300}
+.sppill{display:inline-block;margin-left:10px;font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;border-radius:4px;background:#fff0eb;color:var(--accent);letter-spacing:.06em;vertical-align:middle}
+.qs{padding:96px 64px;border-top:1px solid var(--border);background:var(--ink)}
+.qt{font-family:'Syne',sans-serif;font-size:clamp(22px,3.5vw,40px);font-weight:700;line-height:1.2;letter-spacing:-1.5px;max-width:800px;margin:0 auto 32px;text-align:center;color:var(--bg)}
+.qt span{color:var(--accent)}
+.qa{text-align:center;font-size:13px;color:#444;font-family:'DM Mono',monospace;letter-spacing:.06em}
+footer{padding:40px 64px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.fb{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-1px}
+.fb span{color:var(--accent)}
+.fn{font-size:13px;color:var(--ink3)}
+@media(max-width:900px){.hero,.qs,section,footer{padding-left:24px;padding-right:24px}.prob-layout,.modl,.tg,.fh{grid-template-columns:1fr;gap:32px}.sol-grid,.feat-grid{grid-template-columns:1fr}.sc{border-radius:0!important}.sc:first-child{border-radius:12px 12px 0 0!important}.sc:last-child{border-radius:0 0 12px 12px!important}.flow-steps{grid-template-columns:1fr 1fr}.mg{grid-template-columns:1fr 1fr}.hero-stats{margin-top:48px;gap:32px}.ctable{font-size:12px}.ctable th,.ctable td{padding:10px 12px}}
+@media(max-width:600px){.flow-steps,.mg{grid-template-columns:1fr}.hero-title{letter-spacing:-2px}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hc">
+    <div class="hero-tag">Startup concept · UAE · 2025</div>
+    <h1 class="hero-title">Order<span>One.</span><br>One device.<br>Every platform.</h1>
+    <p class="hero-sub">Every restaurant in the UAE has 6 or 7 separate delivery terminals cluttering their counter. OrderOne replaces all of them with a single device — and a pickup screen outside so drivers stop crowding the store.</p>
+    <div class="hero-cta"><a href="#problem" class="btn-p">See the problem</a><a href="#nextsteps" class="btn-g">What we do next →</a></div>
+    <div class="hero-stats">
+      <div><div class="hn">6–7</div><div class="hl">Devices per store today</div></div>
+      <div><div class="hn" style="color:var(--accent)">1</div><div class="hl">Device with OrderOne</div></div>
+      <div><div class="hn">26,795</div><div class="hl">Restaurants across the UAE</div></div>
+      <div><div class="hn">$0</div><div class="hl">Spent so far</div></div>
+    </div>
+  </div>
+</div>
+
+<section id="problem">
+  <div class="sl">01 — The problem</div>
+  <div class="prob-layout">
+    <div>
+      <h2 class="st">7 devices.<br>One job.<br>Zero sense.</h2>
+      <div class="pt">
+        <p>Walk into any small or medium restaurant in the UAE doing delivery. On the counter you'll find a row of identical white devices — each from a different platform. <strong>They all do exactly the same thing:</strong> beep when an order arrives, show it on screen, and print a receipt staff staple to the bag.</p>
+        <p>Every platform insists on their own device. The store has no say. The counter is cluttered, staff juggle 7 screens, and drivers crowd inside because nobody knows whose order is ready.</p>
+        <p>It's a problem everyone sees. Nobody has fixed it — not in the UAE.</p>
+      </div>
+    </div>
+    <div>
+      <div class="dstrip"><span class="dd" style="background:var(--talabat)"></span><span class="dn">Talabat terminal</span><span class="db">Device #1</span></div>
+      <div class="dstrip"><span class="dd" style="background:var(--talabat)"></span><span class="dn">Talabat terminal</span><span class="db">Device #2</span></div>
+      <div class="dstrip"><span class="dd" style="background:var(--noon)"></span><span class="dn">Noon terminal</span><span class="db">Device #3</span></div>
+      <div class="dstrip"><span class="dd" style="background:var(--careem)"></span><span class="dn">Careem terminal</span><span class="db">Device #4</span></div>
+      <div class="dstrip"><span class="dd" style="background:var(--careem)"></span><span class="dn">Careem terminal</span><span class="db">Device #5</span></div>
+      <div class="dstrip"><span class="dd" style="background:var(--deliveroo)"></span><span class="dn">Deliveroo terminal</span><span class="db">Device #6</span></div>
+      <div class="ptot"><span class="ptl">Total devices at one restaurant</span><span class="ptn">6 devices</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="solution">
+  <div class="sl">02 — The solution</div>
+  <h2 class="st">One device.<br>Every platform.<br>Drivers stay outside.</h2>
+  <div class="sol-grid">
+    <div class="sc"><div class="sn">01</div><div class="stitle">One unified terminal</div><div class="sbody">A single smart device replaces all 6–7 branded terminals. Every platform's orders arrive on one screen. One paper roll. One charger. One login.</div></div>
+    <div class="sc"><div class="sn">02</div><div class="stitle">Same workflow, less chaos</div><div class="sbody">Nothing changes for staff. Order comes in, receipt prints, they staple it to the bag — except now it all comes from one device with the platform name clearly printed.</div></div>
+    <div class="sc"><div class="sn">03</div><div class="stitle">Outside pickup screen</div><div class="sbody">A screen mounted outside shows drivers which order numbers are ready. They wait outside until their number appears. No more crowds at the counter.</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sl">03 — How it works</div>
+  <h2 class="st">Four steps.<br>That's it.</h2>
+  <div class="flow-steps">
+    <div class="fs"><div class="fa">→</div><div class="fi" style="background:#fff0eb">📦</div><div class="ftitle">Order arrives</div><div class="fbody">Any platform. All orders come into the one OrderOne device. It beeps once.</div></div>
+    <div class="fs"><div class="fa">→</div><div class="fi" style="background:#f0fdf4">🧾</div><div class="ftitle">Receipt prints</div><div class="fbody">Platform name printed big and bold at the top. Staff staple it to the bag.</div></div>
+    <div class="fs"><div class="fa">→</div><div class="fi" style="background:#eff6ff">✅</div><div class="ftitle">Mark ready</div><div class="fbody">One tap marks the order ready. Outside screen updates instantly.</div></div>
+    <div class="fs"><div class="fi" style="background:#fefce8">🛵</div><div class="ftitle">Driver collects</div><div class="fbody">Driver sees their number outside, walks in, grabs the bag and leaves.</div></div>
+  </div>
+  <div class="fh">
+    <div>
+      <div class="fhl">New feature — discovered from real restaurants</div>
+      <div class="fht">What about drivers waiting for two orders?</div>
+      <div class="fhb">Restaurant owners told us a real pain point — a driver gets two orders from the same restaurant. One ready in 5 minutes, the other in 15. The first sits getting cold. OrderOne solves this with smart split notifications no other system has.</div>
+    </div>
+    <div class="fhcards">
+      <div class="fhcard"><div class="fhcl">Outside screen tells the driver</div><div class="fhct"><strong>#1038 is ready.</strong> #1042 ready in 8 minutes — you can wait or come back.</div></div>
+      <div class="fhcard"><div class="fhcl">Device inside tells the staff</div><div class="fhct">Driver is waiting for both orders — <strong>hold #1038 warm, don't pack it yet.</strong></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sl">04 — Features</div>
+  <h2 class="st">Built for how<br>restaurants actually work.</h2>
+  <div class="feat-grid">
+    <div class="fc"><div class="ficon">🔔</div><div class="ftit">Sound alert</div><div class="fbd">Device beeps every time a new order arrives. Staff hear it instantly without looking at the screen.</div><span class="ftag">Critical for kitchens</span></div>
+    <div class="fc"><div class="ficon">✅</div><div class="ftit">Accept or reject</div><div class="fbd">Every incoming order shows Accept or Reject. Staff confirm before it enters the queue — familiar workflow.</div><span class="ftag">Familiar workflow</span></div>
+    <div class="fc"><div class="ficon">🖥️</div><div class="ftit">Outside pickup screen</div><div class="fbd">A screen outside shows ready order numbers in platform colors. Unique to OrderOne — no competitor has this.</div><span class="ftag" style="background:#fff0eb;color:var(--accent)">Unique to OrderOne</span></div>
+    <div class="fc"><div class="ficon">📋</div><div class="ftit">Menu management</div><div class="fbd">Snooze any menu item across all platforms instantly from one tap. No more calling each platform separately.</div><span class="ftag">All platforms at once</span></div>
+    <div class="fc"><div class="ficon">📱</div><div class="ftit">Manager app</div><div class="fbd">The owner monitors all orders, revenue, and activity from their phone without being in the store.</div><span class="ftag new">Remote visibility</span></div>
+    <div class="fc"><div class="ficon">🌐</div><div class="ftit">Arabic and English</div><div class="fbd">Full Gulf Arabic support built in. Designed for the UAE market from day one — no competitor does this.</div><span class="ftag new">UAE-first</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="sl">05 — Who we're for</div>
+  <h2 class="st">Small and medium<br>restaurants. Not big chains.</h2>
+  <p style="font-size:17px;font-weight:300;color:var(--ink2);max-width:580px;line-height:1.6">We visited restaurants across Dubai. Big chains already have expensive integrated software. That's not our customer. Our customer is the thousands of small and medium restaurants drowning in devices.</p>
+  <div class="tg">
+    <div class="tc yes"><div class="tclbl yes">Our customer</div><div class="tct">Small and medium restaurants</div><div class="tcb">Shawarma shops, burger places, casual dining — restaurants doing delivery without expensive software. They have 6+ devices on the counter. This is the vast majority of the 26,795 restaurants in the UAE.</div></div>
+    <div class="tc no"><div class="tclbl no">Not our customer right now</div><div class="tct">Big chains with own software</div><div class="tcb">Large chains that have invested in full restaurant management systems integrated with delivery. They've solved this problem expensively. We're not competing with them — yet.</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sl">06 — Market</div>
+  <h2 class="st">The UAE is<br>wide open.</h2>
+  <p style="font-size:17px;font-weight:300;color:var(--ink2);max-width:580px;line-height:1.6">Companies like Deliverect and Otter do this in the US and Europe — but none natively support Talabat, Noon, and Careem. Nobody has built this for the Middle East. That's the gap.</p>
+  <div class="mg">
+    <div class="mc"><div class="mn" style="color:var(--accent)">26,795</div><div class="ml">Restaurants and cafes across the UAE — most small and medium, all with this exact problem</div></div>
+    <div class="mc"><div class="mn">42%</div><div class="ml">Talabat's share of the UAE delivery market — the most critical integration partner</div></div>
+    <div class="mc"><div class="mn">$18B</div><div class="ml">UAE food service market value in 2024, growing every year with 1,200 new restaurants opening in Dubai in 2024 alone</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sl">07 — Business model</div>
+  <h2 class="st">The platforms<br>pay us.</h2>
+  <p style="font-size:17px;font-weight:300;color:var(--ink2);max-width:600px;line-height:1.6;margin-bottom:0">We don't charge restaurants. Every platform currently buys, ships, and supports their own device per restaurant. OrderOne replaces their hardware — they save money, we charge a fee per restaurant per integration.</p>
+  <div class="modl">
+    <div class="modc dark"><div class="modtag">How we make money</div><div class="modp">AED 20</div><div class="mods">Per restaurant · per platform · per month</div><div class="modpts"><div class="modpt"><span class="mck">✓</span>One restaurant with 6 platforms = AED 120/month to us</div><div class="modpt"><span class="mck">✓</span>500 restaurants = AED 60,000/month per platform</div><div class="modpt"><span class="mck">✓</span>Platforms already spend more than this on hardware per store</div><div class="modpt"><span class="mck">✓</span>Scales across every city in the UAE and beyond</div></div></div>
+    <div class="modc"><div class="modtag">Why platforms say yes</div><div class="modp">Win-win</div><div class="mods">They spend less. We earn. Restaurants get one clean device.</div><div class="modpts"><div class="modpt"><span class="mck">✓</span>No more manufacturing and shipping hardware to every restaurant</div><div class="modpt"><span class="mck">✓</span>Higher order acceptance — staff see everything on one screen</div><div class="modpt"><span class="mck">✓</span>Brand on the outside pickup screen — visible to everyone outside</div><div class="modpt"><span class="mck">✓</span>Happier restaurants stay on the platform longer</div></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sl">08 — Competition</div>
+  <h2 class="st">We win on<br>home ground.</h2>
+  <table class="ctable">
+    <thead><tr><th>Company</th><th>Talabat support</th><th>Noon support</th><th>Outside pickup screen</th><th>Based in UAE</th><th>Arabic support</th><th>Driver split orders</th></tr></thead>
+    <tbody>
+      <tr class="us"><td>OrderOne (us)</td><td class="yes">✓ Yes</td><td class="yes">✓ Yes</td><td class="yes">✓ Yes</td><td class="yes">✓ Yes</td><td class="yes">✓ Yes</td><td class="yes">✓ Yes</td></tr>
+      <tr><td>Deliverect</td><td class="partial">~ Partial</td><td class="no">✗ No</td><td class="no">✗ No</td><td class="no">✗ No</td><td class="no">✗ No</td><td class="no">✗ No</td></tr>
+      <tr><td>Otter</td><td class="partial">~ Partial</td><td class="no">✗ No</td><td class="no">✗ No</td><td class="no">✗ No</td><td class="no">✗ No</td><td class="no">✗ No</td></tr>
+      <tr><td>Each platform's own device</td><td class="partial">One only</td><td class="partial">One only</td><td class="no">✗ No</td><td class="yes">✓ Yes</td><td class="no">✗ No</td><td class="no">✗ No</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="nextsteps">
+  <div class="sl">09 — What we do next</div>
+  <h2 class="st">Four steps<br>to make it real.</h2>
+  <div class="stepslist">
+    <div class="steprow"><div class="stepn">01</div><div><div class="steptitle">API access from Talabat, Deliveroo and Careem <span class="sppill">In conversation</span></div><div class="stepbody">We are already in conversation with Talabat and Deliveroo through their partnership teams. Careem is next. One yes from any platform is enough to start building on live order data.</div></div></div>
+    <div class="steprow"><div class="stepn">02</div><div><div class="steptitle">Install free at Rascals Dubai for 30 days <span class="sppill">Pilot confirmed</span></div><div class="stepbody">Rascals Dubai is confirmed as our first pilot store. We install the device and outside screen for free, document everything, and use that proof to scale to 50+ restaurants.</div></div></div>
+    <div class="steprow"><div class="stepn">03</div><div><div class="steptitle">Scale to 50+ restaurants across Dubai <span class="sppill">With your investment</span></div><div class="stepbody">With investment we roll out to 50+ restaurants across Dubai, locking in platform partnerships and building the data foundation for our analytics revenue stream.</div></div></div>
+    <div class="steprow"><div class="stepn">04</div><div><div class="steptitle">Expand to Saudi Arabia <span class="sppill">Year 2</span></div><div class="stepbody">Saudi Arabia has 3x the population of the UAE and the exact same problem. Same product, same model, much bigger market. This is where OrderOne becomes a regional business.</div></div></div>
+  </div>
+</section>
+
+<div class="qs">
+  <div class="qt">"Built by an 11-year-old who walked into a store, saw <span>7 devices doing one job</span>, and asked why."</div>
+  <div class="qa">— Founder, OrderOne · UAE</div>
+</div>
+
+<footer>
+  <div class="fb">Order<span>One</span></div>
+  <div class="fn">Built in the UAE. Solving a problem the UAE has. Starting now.</div>
+</footer>
+
+</body>
+</html>
