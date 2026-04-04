@@ -306,7 +306,7 @@ function switchTab(t){
 function renderOrders(){
   var wrap=document.getElementById('olist');
   orders.forEach(function(o){if(o.status==='ready'&&secsLeft(o)===0)o.status='expired';});
-  if(!orders.length{wrap.innerHTML='<div class="empty-state">'+'No active orders'+'</div>';return;}
+  if(!orders.length){wrap.innerHTML='<div class="empty-state">No active orders</div>';return;}
   var html='';
   orders.forEach(function(o){
     var p=PLAT[o.plat],isR=o.status==='ready',isE=o.status==='expired',isEx=expanded===o.id;

@@ -45,7 +45,7 @@ main{padding:20px 28px;max-width:900px;margin:0 auto}
 .item-emoji{font-size:22px;width:36px;text-align:center;flex-shrink:0}
 .item-info{flex:1}
 .item-name{font-size:14px;font-weight:500;margin-bottom:3px}
-.item-name-ar{font-size:13px;color:var(--ink3);margin-bottom:3px}
+
 .item-price{font-size:12px;color:var(--ink3);font-family:'DM Mono',monospace}
 .item-plats{display:flex;gap:4px;margin-top:5px}
 .item-plat-dot{width:7px;height:7px;border-radius:50%}
@@ -103,24 +103,24 @@ var PLAT_LIST=[
 
 var MENU=[
   {cat:'Burgers',cat_ar:'برقر',emoji:'🍔',items:[
-    {id:1,name:'Smash Burger',name_ar:'سماش برقر',price:'AED 42',on:true,plats:['talabat','noon','careem','deliveroo']},
-    {id:2,name:'Double Cheese',name_ar:'دبل جبن',price:'AED 52',on:true,plats:['talabat','noon','careem','deliveroo']},
-    {id:3,name:'Crispy Chicken',name_ar:'كرسبي تشيكن',price:'AED 45',on:false,plats:['talabat','noon','deliveroo']},
-    {id:4,name:'Veggie Burger',name_ar:'برقر نباتي',price:'AED 38',on:true,plats:['talabat','noon']}
+    {id:1,name:'Smash Burger',name_ar:'سماش برقر',price:'AED 42',on:true,plats:['talabat','noon','careem','hungerstation','deliveroo','instashop']},
+    {id:2,name:'Double Cheese',name_ar:'دبل جبن',price:'AED 52',on:true,plats:['talabat','noon','careem','hungerstation','deliveroo','instashop']},
+    {id:3,name:'Crispy Chicken',name_ar:'كرسبي تشيكن',price:'AED 45',on:false,plats:['talabat','noon','careem','hungerstation','deliveroo','instashop']},
+    {id:4,name:'Veggie Burger',name_ar:'برقر نباتي',price:'AED 38',on:true,plats:['talabat','noon','careem','hungerstation','deliveroo','instashop']}
   ]},
   {cat:'Sides',cat_ar:'مقبلات',emoji:'🍟',items:[
-    {id:5,name:'Loaded Fries',name_ar:'فرايز محشية',price:'AED 22',on:true,plats:['talabat','noon','careem','deliveroo']},
-    {id:6,name:'Onion Rings',name_ar:'حلقات بصل',price:'AED 18',on:true,plats:['talabat','careem']},
-    {id:7,name:'Mac Bites',name_ar:'ماك بايتس',price:'AED 20',on:true,plats:['talabat','noon','careem','deliveroo']}
+    {id:5,name:'Loaded Fries',name_ar:'فرايز محشية',price:'AED 22',on:true,plats:['talabat','noon','careem','hungerstation','deliveroo','instashop']},
+    {id:6,name:'Onion Rings',name_ar:'حلقات بصل',price:'AED 18',on:true,plats:['talabat','noon','careem','hungerstation','deliveroo','instashop']},
+    {id:7,name:'Mac Bites',name_ar:'ماك بايتس',price:'AED 20',on:true,plats:['talabat','noon','careem','hungerstation','deliveroo','instashop']}
   ]},
   {cat:'Drinks',cat_ar:'مشروبات',emoji:'🥤',items:[
-    {id:8,name:'Lemonade',name_ar:'ليمونادة',price:'AED 16',on:true,plats:['talabat','noon','careem','deliveroo']},
-    {id:9,name:'Watermelon Juice',name_ar:'عصير بطيخ',price:'AED 18',on:false,plats:['talabat','noon']},
-    {id:10,name:'Soft Drink',name_ar:'مشروب غازي',price:'AED 8',on:true,plats:['talabat','noon','careem','deliveroo']}
+    {id:8,name:'Lemonade',name_ar:'ليمونادة',price:'AED 16',on:true,plats:['talabat','noon','careem','hungerstation','deliveroo','instashop']},
+    {id:9,name:'Watermelon Juice',name_ar:'عصير بطيخ',price:'AED 18',on:false,plats:['talabat','noon','careem','hungerstation','deliveroo','instashop']},
+    {id:10,name:'Soft Drink',name_ar:'مشروب غازي',price:'AED 8',on:true,plats:['talabat','noon','careem','hungerstation','deliveroo','instashop']}
   ]},
   {cat:'Desserts',cat_ar:'حلويات',emoji:'🍦',items:[
-    {id:11,name:'Nutella Waffle',name_ar:'وافل نوتيلا',price:'AED 28',on:true,plats:['talabat','noon']},
-    {id:12,name:'Ice Cream',name_ar:'ايس كريم',price:'AED 15',on:true,plats:['talabat','careem','deliveroo']}
+    {id:11,name:'Nutella Waffle',name_ar:'وافل نوتيلا',price:'AED 28',on:true,plats:['talabat','noon','careem','hungerstation','deliveroo','instashop']},
+    {id:12,name:'Ice Cream',name_ar:'ايس كريم',price:'AED 15',on:true,plats:['talabat','noon','careem','hungerstation','deliveroo','instashop']}
   ]}
 ];
 
@@ -174,7 +174,7 @@ function renderMenu(){
   MENU.forEach(function(cat){
     var items=cat.items.filter(function(i){
       if(activePlat!=='all'&&!i.plats.includes(activePlat))return false;
-      if(q&&i.name.toLowerCase().indexOf(q)===-1&&i.name_ar.indexOf(q)===-1)return false;
+      if(q&&i.name.toLowerCase().indexOf(q)===-1)return false;
       return true;
     });
     if(!items.length)return;
@@ -184,12 +184,12 @@ function renderMenu(){
     html+='<div class="items-grid">';
     items.forEach(function(item){
       var iname=item.name;
-      var iname2=item.name_ar;
+      var iname2='';
       var statusHtml=item.on?'<span class="item-status avail">Available</span>':'<span class="item-status snoozed-badge">Snoozed</span>';
       var platsHtml=item.plats.map(function(pk){var pl=PLAT_LIST.find(function(x){return x.key===pk;});return pl?'<span class="item-plat-dot" style="background:'+pl.color+'" title="'+pl.label+'"></span>':'';}).join('');
       html+='<div class="item-row'+(item.on?'':' snoozed')+'" onclick="toggleItem('+item.id+')">';
       html+='<span class="item-emoji">'+cat.emoji+'</span>';
-      html+='<div class="item-info"><div class="item-name">'+iname+'</div><div class="item-name-ar">'+iname2+'</div><div class="item-price">'+item.price+'</div><div class="item-plats">'+platsHtml+'</div></div>';
+      html+='<div class="item-info"><div class="item-name">'+iname+'</div><div class="item-price">'+item.price+'</div><div class="item-plats">'+platsHtml+'</div></div>';
       html+=statusHtml;
       html+='<button class="toggle-btn '+(item.on?'on':'off')+'" onclick="event.stopPropagation();toggleItem('+item.id+')"></button>';
       html+='</div>';
