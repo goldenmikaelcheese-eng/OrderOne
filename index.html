@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OrderOne — One device. Every platform.</title>
+<meta name="description" content="OrderOne unifies all food delivery platforms into one device. Free for UAE restaurants. Built for Talabat, Noon, Careem, Deliveroo and more.">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060606;--card:#0e0e0e;--card2:#111;--border:#181818;--border2:#222;--t1:#f0ede8;--t2:#555;--t3:#222;--orange:#FF6B35;--green:#22c55e;--amber:#f59e0b;--blue:#60a5fa;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);overflow-x:hidden}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 60px;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,6,6,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:all .3s}
+@media(max-width:700px){nav{padding:16px 24px}}
+.nav-brand{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.5px;color:var(--t1);text-decoration:none}
+.nav-brand em{color:var(--orange);font-style:normal}
+.nav-links{display:flex;align-items:center;gap:32px}
+@media(max-width:700px){.nav-links{gap:16px}}
+.nav-link{font-size:13px;color:var(--t2);text-decoration:none;transition:color .15s}
+.nav-link:hover{color:var(--t1)}
+.nav-cta{font-size:13px;padding:8px 18px;border-radius:8px;background:var(--orange);color:#fff;font-weight:500;text-decoration:none;transition:opacity .15s}
+.nav-cta:hover{opacity:.85}
+
+/* SECTIONS */
+section{padding:100px 60px;max-width:1100px;margin:0 auto}
+@media(max-width:700px){section{padding:60px 24px}}
+
+/* HERO */
+.hero-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%, #FF6B3508 0%, transparent 70%);pointer-events:none}
+.hero-content{text-align:center;position:relative;z-index:1;padding:120px 40px 80px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);font-family:'DM Mono',monospace;margin-bottom:24px;padding:6px 16px;border:1px solid #FF6B3533;border-radius:20px;background:#FF6B3508}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(48px,8vw,96px);font-weight:800;letter-spacing:-3px;line-height:.95;margin-bottom:28px}
+.hero-title em{color:var(--orange);font-style:normal}
+.hero-sub{font-size:clamp(16px,2vw,20px);color:var(--t2);max-width:560px;margin:0 auto 40px;line-height:1.6}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
+.btn-primary{padding:14px 28px;border-radius:10px;background:var(--orange);color:#fff;font-size:15px;font-weight:500;text-decoration:none;transition:opacity .15s}
+.btn-primary:hover{opacity:.85}
+.btn-secondary{padding:14px 28px;border-radius:10px;border:1px solid var(--border2);background:var(--card);color:var(--t1);font-size:15px;text-decoration:none;transition:all .15s}
+.btn-secondary:hover{border-color:var(--t2)}
+.plat-pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pill{padding:5px 14px;border-radius:20px;font-size:11px;font-family:'DM Mono',monospace;border:1px solid}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:80px}
+@media(max-width:700px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--card);padding:28px 24px;text-align:center}
+.stat-n{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1;margin-bottom:6px}
+.stat-l{font-size:12px;color:var(--t2);font-family:'DM Mono',monospace}
+
+/* HOW IT WORKS */
+.section-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);font-family:'DM Mono',monospace;margin-bottom:16px}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px}
+.section-title em{color:var(--orange);font-style:normal}
+.section-sub{font-size:16px;color:var(--t2);line-height:1.6;max-width:560px;margin-bottom:48px}
+.how-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--border);border-radius:16px;overflow:hidden}
+@media(max-width:700px){.how-grid{grid-template-columns:1fr}}
+.how-step{background:var(--card);padding:28px 20px;border-right:1px solid var(--border);position:relative;transition:background .2s}
+.how-step:last-child{border-right:none}
+.how-step:hover{background:var(--card2)}
+.how-num{font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:var(--border2);line-height:1;margin-bottom:16px}
+.how-icon{font-size:24px;margin-bottom:12px}
+.how-title{font-size:14px;font-weight:500;color:var(--t1);margin-bottom:8px;line-height:1.3}
+.how-body{font-size:12px;color:var(--t2);line-height:1.6}
+
+/* 5 SCREENS */
+.screens-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:40px}
+@media(max-width:800px){.screens-grid{grid-template-columns:repeat(2,1fr)}}
+.screen-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;transition:border-color .2s;text-decoration:none;display:block}
+.screen-card:hover{border-color:var(--border2)}
+.screen-icon{font-size:28px;margin-bottom:12px}
+.screen-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--t1);margin-bottom:6px}
+.screen-desc{font-size:11px;color:var(--t2);line-height:1.5}
+
+/* FREE FOR RESTAURANTS */
+.free-wrap{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:60px;text-align:center;position:relative;overflow:hidden}
+.free-wrap::before{content:'FREE';position:absolute;font-family:'Syne',sans-serif;font-size:200px;font-weight:800;color:#FF6B3506;top:50%;left:50%;transform:translate(-50%,-50%);letter-spacing:-8px;pointer-events:none}
+.free-title{font-family:'Syne',sans-serif;font-size:clamp(32px,5vw,64px);font-weight:800;letter-spacing:-2px;line-height:1;margin-bottom:16px}
+.free-title em{color:var(--orange)}
+.free-sub{font-size:18px;color:var(--t2);max-width:500px;margin:0 auto 32px;line-height:1.6}
+.free-note{font-size:13px;color:var(--t3);font-family:'DM Mono',monospace}
+
+/* WHY PLATFORMS */
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.why-grid{grid-template-columns:1fr}}
+.why-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;display:flex;gap:14px;transition:border-color .2s}
+.why-card:hover{border-color:var(--border2)}
+.why-icon{font-size:22px;flex-shrink:0;margin-top:2px}
+.why-title{font-size:14px;font-weight:500;color:var(--t1);margin-bottom:5px}
+.why-body{font-size:13px;color:var(--t2);line-height:1.6}
+
+/* COMPETITION */
+.comp-table{width:100%;border-collapse:collapse;border-radius:14px;overflow:hidden;border:1px solid var(--border)}
+.comp-table th{font-size:11px;font-family:'DM Mono',monospace;color:var(--t2);padding:12px 16px;text-align:left;background:var(--card);border-bottom:1px solid var(--border)}
+.comp-table th.us{color:var(--orange)}
+.comp-table td{font-size:13px;padding:12px 16px;border-bottom:1px solid var(--border2);color:var(--t2);background:var(--card)}
+.comp-table td:first-child{color:var(--t1);font-weight:500}
+.comp-table tr:last-child td{border-bottom:none}
+.yes{color:var(--green);font-weight:600}
+.no{color:var(--red)}
+
+/* LOCKER TEASER */
+.locker-teaser{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:48px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+@media(max-width:700px){.locker-teaser{grid-template-columns:1fr}}
+.phase-badge{display:inline-block;font-size:10px;padding:3px 10px;border-radius:20px;background:#0f172a;color:var(--blue);font-family:'DM Mono',monospace;margin-bottom:16px}
+.locker-visual{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lslot{background:var(--bg);border:1px solid var(--border2);border-radius:10px;padding:14px;text-align:center}
+.lslot.filled{border-color:#FF6B3555;background:#1a0800}
+.lslot.locked{border-color:#166534;background:#052e16}
+.lslot-num{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--t2)}
+.lslot.filled .lslot-num{color:var(--orange)}
+.lslot.locked .lslot-num{color:var(--green)}
+.lslot-icon{font-size:18px;margin-bottom:4px}
+.lslot-label{font-size:9px;font-family:'DM Mono',monospace;color:var(--t2);margin-top:4px}
+
+/* CONTACT */
+.contact-wrap{text-align:center;padding:80px 0}
+.contact-email{font-family:'Syne',sans-serif;font-size:clamp(20px,3vw,32px);font-weight:800;color:var(--orange);text-decoration:none;letter-spacing:-.5px;display:block;margin-bottom:12px}
+.contact-email:hover{opacity:.8}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:24px 60px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+@media(max-width:700px){footer{padding:20px 24px}}
+.footer-brand{font-family:'Syne',sans-serif;font-size:15px;font-weight:800}
+.footer-brand em{color:var(--orange);font-style:normal}
+.footer-note{font-size:11px;color:var(--t2);font-family:'DM Mono',monospace}
+
+/* ANIMATIONS */
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="#">Order<em>One</em></a>
+  <div class="nav-links">
+    <a class="nav-link" href="#how">How it works</a>
+    <a class="nav-link" href="#platforms">Platforms</a>
+    <a class="nav-link" href="#locker">Locker</a>
+    <a class="nav-cta" href="mailto:partnerships@orderone.ae">Contact us</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-wrap">
+  <div class="hero-bg"></div>
+  <div class="hero-content fade-in">
+    <div class="hero-eyebrow">🇦🇪 Built in UAE · 100% local</div>
+    <h1 class="hero-title">One device.<br><em>Every</em> platform.</h1>
+    <p class="hero-sub">OrderOne unifies Talabat, Noon, Careem, Deliveroo and more into a single screen. Free for restaurants. Platforms pay us — not you.</p>
+    <div class="hero-btns">
+      <a class="btn-primary" href="mailto:partnerships@orderone.ae">Get in touch</a>
+      <a class="btn-secondary" href="#how">See how it works</a>
+    </div>
+    <div class="plat-pills">
+      <span class="pill" style="background:#FF6B3512;border-color:#FF6B3544;color:#FF6B35">Talabat</span>
+      <span class="pill" style="background:#d4a80012;border-color:#d4a80044;color:#d4a800">Noon</span>
+      <span class="pill" style="background:#4CAF7212;border-color:#4CAF7244;color:#4CAF72">Careem</span>
+      <span class="pill" style="background:#FF2D5512;border-color:#FF2D5544;color:#FF2D55">HungerStation</span>
+      <span class="pill" style="background:#00CCBC12;border-color:#00CCBC44;color:#00CCBC">Deliveroo</span>
+      <span class="pill" style="background:#A855F712;border-color:#A855F744;color:#A855F7">InstaShop</span>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<section style="padding-top:80px">
+  <div class="stats-row fade-in">
+    <div class="stat"><div class="stat-n" style="color:var(--orange)">AED 0</div><div class="stat-l">Cost to restaurants</div></div>
+    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Platforms in one screen</div></div>
+    <div class="stat"><div class="stat-n">10 min</div><div class="stat-l">To set up</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--green)">5</div><div class="stat-l">Devices in the system</div></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-eyebrow fade-in">How it works</div>
+  <h2 class="section-title fade-in">Simple for restaurants.<br><em>Powerful</em> for platforms.</h2>
+  <p class="section-sub fade-in">Every order from every platform flows into one device. The kitchen sees it. The outside screen shows drivers. The manager tracks everything from their phone.</p>
+  <div class="how-grid fade-in">
+    <div class="how-step"><div class="how-num">01</div><div class="how-icon">📲</div><div class="how-title">Order comes in from any platform</div><div class="how-body">Talabat, Noon, Careem — all platforms send orders to one screen automatically</div></div>
+    <div class="how-step"><div class="how-num">02</div><div class="how-icon">✅</div><div class="how-title">Staff accept with one tap</div><div class="how-body">Loud unique beep per platform. Big platform name. Impossible to miss.</div></div>
+    <div class="how-step"><div class="how-num">03</div><div class="how-icon">👨‍🍳</div><div class="how-title">Kitchen screen updates instantly</div><div class="how-body">Chef sees all orders in real time. Ticks off each item as it's prepared.</div></div>
+    <div class="how-step"><div class="how-num">04</div><div class="how-icon">📺</div><div class="how-title">Outside screen guides drivers</div><div class="how-body">Drivers see their order number outside. Restaurant/bar split shown clearly.</div></div>
+    <div class="how-step"><div class="how-num">05</div><div class="how-icon">📊</div><div class="how-title">Manager tracks everything</div><div class="how-body">Live dashboard on any phone — revenue, stock alerts, platform performance.</div></div>
+  </div>
+</section>
+
+<!-- 5 SCREENS -->
+<section>
+  <div class="section-eyebrow fade-in">The system</div>
+  <h2 class="section-title fade-in">5 screens.<br><em>1</em> connected system.</h2>
+  <div class="screens-grid fade-in">
+    <a class="screen-card" href="POS%20Terminal.html" target="_blank"><div class="screen-icon">📱</div><div class="screen-name">POS Terminal</div><div class="screen-desc">At the counter. Receives all orders. Runs on Sunmi V2s.</div></a>
+    <a class="screen-card" href="Menu%20Tablet.html" target="_blank"><div class="screen-icon">📋</div><div class="screen-name">Menu Tablet</div><div class="screen-desc">Manages stock and menu across all platforms at once.</div></a>
+    <a class="screen-card" href="KDS.html" target="_blank"><div class="screen-icon">👨‍🍳</div><div class="screen-name">Kitchen Display</div><div class="screen-desc">Chef sees every order. Tap items as they're prepared.</div></a>
+    <a class="screen-card" href="Pickup%20Screen.html" target="_blank"><div class="screen-icon">📺</div><div class="screen-name">Pickup Screen</div><div class="screen-desc">Outside TV for drivers. Restaurant and bar split clearly.</div></a>
+    <a class="screen-card" href="Manager%20Dashboard.html" target="_blank"><div class="screen-icon">📊</div><div class="screen-name">Dashboard</div><div class="screen-desc">Manager sees live orders, revenue and alerts from any phone.</div></a>
+  </div>
+</section>
+
+<!-- FREE FOR RESTAURANTS -->
+<section id="platforms">
+  <div class="free-wrap fade-in">
+    <h2 class="free-title">Free for<br><em>restaurants.</em></h2>
+    <p class="free-sub">Platforms pay us AED 100 per restaurant per month. Restaurants pay nothing. Ever.</p>
+    <a class="btn-primary" href="mailto:partnerships@orderone.ae" style="display:inline-block">Contact us about your restaurant</a>
+    <p class="free-note" style="margin-top:20px">Platforms: partnerships@orderone.ae</p>
+  </div>
+</section>
+
+<!-- WHY PLATFORMS -->
+<section>
+  <div class="section-eyebrow fade-in">For platforms</div>
+  <h2 class="section-title fade-in">Why Talabat, Noon and Careem<br>need <em>OrderOne.</em></h2>
+  <div class="why-grid fade-in">
+    <div class="why-card"><div class="why-icon">💰</div><div><div class="why-title">Hardware costs millions — we replace it for AED 100/month</div><div class="why-body">Every platform spends millions on tablets for restaurants. OrderOne replaces all of them for a flat monthly fee.</div></div></div>
+    <div class="why-card"><div class="why-icon">📉</div><div><div class="why-title">Missed orders = lost commission</div><div class="why-body">Every missed order costs the platform their cut. One screen means zero missed orders — protecting their revenue directly.</div></div></div>
+    <div class="why-card"><div class="why-icon">🛵</div><div><div class="why-title">Outside screen speeds up pickups</div><div class="why-body">Drivers know exactly where to go and what's ready before they even walk in. Faster pickups, better ratings.</div></div></div>
+    <div class="why-card"><div class="why-icon">🏪</div><div><div class="why-title">Instant access to more restaurants</div><div class="why-body">Restaurants refuse to add another device. With OrderOne — no new device needed. Platforms unlock thousands of restaurants with one deal.</div></div></div>
+    <div class="why-card"><div class="why-icon">🔔</div><div><div class="why-title">Alert when food ready but no driver</div><div class="why-body">OrderOne tells the platform when food is ready but no driver is assigned — so they reassign before the customer cancels.</div></div></div>
+    <div class="why-card"><div class="why-icon">📊</div><div><div class="why-title">Real data on every restaurant</div><div class="why-body">Platforms currently have zero visibility into what happens inside a restaurant. OrderOne gives them real-time data on prep times, stock and performance.</div></div></div>
+  </div>
+</section>
+
+<!-- VS COMPETITION -->
+<section>
+  <div class="section-eyebrow fade-in">Competition</div>
+  <h2 class="section-title fade-in">We checked.<br><em>Nobody</em> does what we do.</h2>
+  <table class="comp-table fade-in">
+    <tr>
+      <th>Feature</th>
+      <th class="us">OrderOne</th>
+      <th>Grubtech</th>
+      <th>Deliverect</th>
+    </tr>
+    <tr><td>Free for restaurants</td><td><span class="yes">✓ Always free</span></td><td><span class="no">✗ Monthly fee</span></td><td><span class="no">✗ $75–180/mo</span></td></tr>
+    <tr><td>Hardware included</td><td><span class="yes">✓ Sunmi V2s</span></td><td><span class="no">✗ Software only</span></td><td><span class="no">✗ Software only</span></td></tr>
+    <tr><td>Outside pickup screen</td><td><span class="yes">✓ Unique</span></td><td><span class="no">✗ No</span></td><td><span class="no">✗ No</span></td></tr>
+    <tr><td>Driver split notifications</td><td><span class="yes">✓ Unique</span></td><td><span class="no">✗ No</span></td><td><span class="no">✗ No</span></td></tr>
+    <tr><td>UAE platforms native</td><td><span class="yes">✓ Built for UAE</span></td><td><span class="no">✗ Partial</span></td><td><span class="no">✗ No Talabat/Noon</span></td></tr>
+    <tr><td>Setup time</td><td><span class="yes">✓ 10 minutes</span></td><td><span class="no">✗ Weeks + IT team</span></td><td><span class="no">✗ Months</span></td></tr>
+  </table>
+</section>
+
+<!-- LOCKER TEASER -->
+<section id="locker">
+  <div class="locker-teaser fade-in">
+    <div>
+      <span class="phase-badge">Phase 2 — Coming soon</span>
+      <h2 class="section-title" style="margin-bottom:12px">OrderOne<br><em>Locker.</em></h2>
+      <p style="font-size:15px;color:var(--t2);line-height:1.7;margin-bottom:24px">A smart pickup shelf outside the restaurant. Driver scans QR code, only their slot unlocks. Zero crowding. Zero confusion. Zero contact.</p>
+      <a class="btn-primary" href="Locker.html" target="_blank">See interactive demo →</a>
+    </div>
+    <div class="locker-visual">
+      <div class="lslot filled"><div class="lslot-icon">📦</div><div class="lslot-num">1</div><div class="lslot-label">Talabat #1038</div></div>
+      <div class="lslot"><div class="lslot-icon"></div><div class="lslot-num">2</div><div class="lslot-label">Empty</div></div>
+      <div class="lslot locked"><div class="lslot-icon">🔓</div><div class="lslot-num">3</div><div class="lslot-label">Careem #3017</div></div>
+      <div class="lslot filled"><div class="lslot-icon">📦</div><div class="lslot-num">4</div><div class="lslot-label">Noon #2051</div></div>
+      <div class="lslot"><div class="lslot-icon"></div><div class="lslot-num">5</div><div class="lslot-label">Empty</div></div>
+      <div class="lslot"><div class="lslot-icon"></div><div class="lslot-num">6</div><div class="lslot-label">Empty</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section>
+  <div class="contact-wrap fade-in">
+    <div class="section-eyebrow" style="margin-bottom:20px">Get in touch</div>
+    <h2 class="section-title" style="margin-bottom:16px">Ready to bring OrderOne<br>to your <em>restaurant?</em></h2>
+    <p style="font-size:16px;color:var(--t2);margin-bottom:32px">Whether you're a restaurant, a platform, or an investor — we'd love to talk.</p>
+    <a class="contact-email" href="mailto:partnerships@orderone.ae">partnerships@orderone.ae</a>
+    <p style="font-size:13px;color:var(--t2)">Based in Dubai, UAE · orderone.ae</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">Order<em>One</em></div>
+  <div class="footer-note">100% UAE built · Dubai · 2025 · partnerships@orderone.ae</div>
+  <div class="footer-note">Talabat · Noon · Careem · HungerStation · Deliveroo · InstaShop</div>
+</footer>
+
+<script>
+var observer=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');}});},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(function(el){observer.observe(el);});
+</script>
+</body>
+</html>
