@@ -227,14 +227,44 @@ input[type=range]{flex:1;accent-color:var(--orange)}
 </div>
 
 <script>
+var PLAT_COLORS={talabat:'#FF6B35',noon:'#d4a800',careem:'#4CAF72',hungerstation:'#FF2D55',deliveroo:'#00CCBC',instashop:'#A855F7'};
 var orders=[
-  {id:1,num:'#1038',plat:'Talabat',status:'ready',at:Date.now()-420000,color:'#FF6B35'},
-  {id:2,num:'#2051',plat:'Noon',status:'preparing',at:Date.now()-300000,color:'#d4a800'},
-  {id:3,num:'#3017',plat:'Careem',status:'preparing',at:Date.now()-180000,color:'#4CAF72'},
-  {id:4,num:'#5002',plat:'Deliveroo',status:'preparing',at:Date.now()-90000,color:'#00CCBC'},
-  {id:5,num:'#6011',plat:'HungerStation',status:'ready',at:Date.now()-500000,color:'#FF2D55'}
+  {id:1,num:'#1038',plat:'talabat',platLabel:'Talabat',status:'ready',section:'rest',at:Date.now()-420000},
+  {id:2,num:'#2051',plat:'noon',platLabel:'Noon',status:'preparing',section:'rest',at:Date.now()-300000},
+  {id:3,num:'#3017',plat:'careem',platLabel:'Careem',status:'preparing',section:'bar',at:Date.now()-180000},
+  {id:4,num:'#5002',plat:'deliveroo',platLabel:'Deliveroo',status:'preparing',section:'rest',at:Date.now()-90000},
+  {id:5,num:'#6011',plat:'hungerstation',platLabel:'HungerStation',status:'ready',section:'rest',at:Date.now()-500000}
 ];
 var busyBig=false,darkMode=true;
+
+function loadFromPOS(){
+  try{
+    var data=localStorage.getItem('orderone_kds');
+    if(data){
+      var loaded=JSON.parse(data);
+      if(loaded.length){
+        orders=loaded.map(function(o){
+          return{id:o.id,num:o.num,plat:o.plat,platLabel:o.plat.charAt(0).toUpperCase()+o.plat.slice(1),status:o.status,section:o.section||'rest',at:o.at};
+        });
+      }
+    }
+  }catch(e){}
+  // Check stock alerts
+  try{
+    var sa=localStorage.getItem('orderone_stock_alert');
+    if(sa){
+      var alerts=document.getElementById('dash-alerts');
+      var existing=document.getElementById('stock-alert-dash');
+      if(!existing){
+        var div=document.createElement('div');
+        div.id='stock-alert-dash';
+        div.className='alert warn';
+        div.innerHTML='<span class="alert-icon">📦</span>'+sa;
+        alerts.prepend(div);
+      }
+    }
+  }catch(e){}
+}
 
 function ago(ts){var m=Math.floor((Date.now()-ts)/60000);return m<1?'just now':m+'m ago';}
 
@@ -245,10 +275,10 @@ function toggleMode(){
 }
 
 function refreshDash(){
+  loadFromPOS();
   renderLiveOrders();
   var btn=document.querySelector('.icon-btn');
-  btn.style.transform='rotate(360deg)';
-  btn.style.transition='transform .4s';
+  btn.style.transform='rotate(360deg)';btn.style.transition='transform .4s';
   setTimeout(function(){btn.style.transform='';btn.style.transition='';},400);
 }
 
@@ -267,17 +297,30 @@ function toggleBusyBig(){
 }
 
 function renderLiveOrders(){
+  loadFromPOS();
   var html='';
-  orders.forEach(function(o){
-    var isR=o.status==='ready';
-    html+='<div class="lord'+(isR?' ready':'')+'">';
-    html+='<span class="lord-dot" style="background:'+o.color+'"></span>';
-    html+='<span class="lord-num" style="color:'+o.color+'">'+o.num+'</span>';
-    html+='<span class="lord-plat" style="color:'+o.color+'">'+o.plat+'</span>';
-    html+='<span class="lord-status '+(isR?'ready-s':'prep')+'">'+(isR?'Ready':'Preparing')+'</span>';
-    html+='<span class="lord-age">'+ago(o.at)+'</span>';
-    html+='</div>';
-  });
+  var barOrders=orders.filter(function(o){return o.section==='bar';});
+  var restOrders=orders.filter(function(o){return o.section!=='bar';});
+  function renderGroup(group,label){
+    if(!group.length)return'';
+    var h='<div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2);font-family:\'DM Mono\',monospace;margin:12px 0 8px">'+label+'</div>';
+    group.forEach(function(o){
+      var color=PLAT_COLORS[o.plat]||'#888';
+      var isR=o.status==='ready';
+      h+='<div class="lord'+(isR?' ready':'')+'">';
+      h+='<span class="lord-dot" style="background:'+color+'"></span>';
+      h+='<span class="lord-num" style="color:'+color+'">'+o.num+'</span>';
+      h+='<span class="lord-plat" style="color:'+color+'">'+(o.platLabel||o.plat)+'</span>';
+      if(o.section==='bar')h+='<span style="font-size:9px;padding:2px 7px;border-radius:20px;background:#0f172a;color:#60a5fa;font-family:\'DM Mono\',monospace;margin-left:4px">Bar</span>';
+      h+='<span class="lord-status '+(isR?'ready-s':'prep')+'">'+(isR?'Ready':'Preparing')+'</span>';
+      h+='<span class="lord-age">'+ago(o.at)+'</span>';
+      h+='</div>';
+    });
+    return h;
+  }
+  html+=renderGroup(restOrders,'🍔 Restaurant orders');
+  html+=renderGroup(barOrders,'🍹 Bar orders');
+  if(!orders.length)html='<div style="color:var(--t2);padding:20px;text-align:center;font-size:13px">No active orders</div>';
   document.getElementById('lo-list').innerHTML=html;
 }
 
@@ -307,8 +350,9 @@ function renderCharts(){
 var now=new Date();
 document.getElementById('dash-date').textContent=now.toLocaleDateString('en-AE',{weekday:'long',day:'numeric',month:'long'});
 renderCharts();
+loadFromPOS();
 renderLiveOrders();
-setInterval(renderLiveOrders,30000);
+setInterval(function(){loadFromPOS();renderLiveOrders();},5000);
 </script>
 </body>
 </html>
