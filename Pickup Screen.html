@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OrderOne — Pickup Screen</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060606;--card:#0e0e0e;--border:#1a1a1a;--t1:#ffffff;--t2:#444;--green:#22c55e;--amber:#f59e0b;--blue:#60a5fa;}
+body.light{--bg:#f8fafc;--card:#ffffff;--border:#e2e8f0;--t1:#0f172a;--t2:#94a3b8;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--t1);font-family:'DM Mono',monospace;min-height:100vh;display:flex;flex-direction:column;transition:background .3s}
+
+header{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;border-bottom:1px solid var(--border);flex-shrink:0}
+.hdr-title{font-family:'Syne',sans-serif;font-size:clamp(18px,3vw,32px);font-weight:800;letter-spacing:-1px;color:var(--t1)}
+.hdr-sub{font-size:clamp(8px,1vw,11px);color:var(--t2);margin-top:3px;letter-spacing:.06em}
+.hdr-right{display:flex;align-items:center;gap:14px}
+.clock{font-family:'Syne',sans-serif;font-size:clamp(16px,2.5vw,28px);font-weight:700;color:var(--t2);letter-spacing:-.5px}
+.brand{font-family:'Syne',sans-serif;font-size:clamp(12px,1.5vw,16px);font-weight:800;color:var(--t2)}
+.brand em{color:#FF6B35;font-style:normal}
+.hbtn{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--t2);font-size:13px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.hbtn:hover{color:var(--t1)}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+main{flex:1;padding:20px 40px;overflow:hidden;display:flex;flex-direction:column;gap:20px}
+
+/* DRIVER SPLIT ALERT */
+.split-alert{background:#0a0a1a;border:1px solid #1e3a5f;border-radius:12px;padding:14px 18px;display:none}
+body.light .split-alert{background:#eff6ff;border-color:#93c5fd}
+.split-alert.show{display:block;animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.split-title{font-size:clamp(9px,.9vw,11px);letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;font-weight:600}
+.split-cards{display:flex;gap:10px;flex-wrap:wrap}
+.split-card{flex:1;min-width:200px;background:#0f172a;border:1px solid #1e3a5f;border-radius:10px;padding:12px 14px}
+body.light .split-card{background:#f0f7ff;border-color:#bfdbfe}
+.split-card-num{font-family:'Syne',sans-serif;font-size:clamp(18px,2vw,24px);font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
+.split-card-status{font-size:clamp(9px,.9vw,11px);color:var(--t2)}
+.split-card.ready-card{border-color:#166534}
+body.light .split-card.ready-card{border-color:#86efac;background:#f0fdf4}
+.split-card.ready-card .split-card-status{color:var(--green)}
+
+/* SECTIONS */
+.section-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1}
+.section-col{display:flex;flex-direction:column;gap:12px}
+.sec-label{font-size:clamp(8px,.9vw,10px);font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* READY TILES */
+.ready-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.rtile{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:14px 12px;animation:pop .28s cubic-bezier(.34,1.56,.64,1);cursor:default}
+.rtile.rest-tile{border-color:#166534}
+body.light .rtile.rest-tile{border-color:#86efac}
+.rtile.bar-tile{border-color:#1e3a5f}
+body.light .rtile.bar-tile{border-color:#93c5fd}
+.tile-plat{display:flex;align-items:center;gap:5px;font-size:clamp(9px,1vw,11px);font-weight:500;margin-bottom:6px}
+.tile-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.tile-num{font-family:'Syne',sans-serif;font-size:clamp(26px,4vw,44px);font-weight:800;line-height:1.1;margin-bottom:6px;letter-spacing:-1px;word-break:break-all}
+.tile-badge{display:inline-block;font-size:clamp(8px,.8vw,9px);padding:3px 9px;border-radius:20px;letter-spacing:.06em}
+.tile-badge.rest{background:#052e16;color:var(--green)}
+body.light .tile-badge.rest{background:#dcfce7;color:#15803d}
+.tile-badge.bar{background:#0f172a;color:var(--blue)}
+body.light .tile-badge.bar{background:#eff6ff;color:#1d4ed8}
+
+/* PREPARING CHIPS */
+.prep-chips{display:flex;gap:7px;flex-wrap:wrap}
+.pchip{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:7px 12px;display:flex;align-items:center;gap:6px}
+.pchip-dot{width:5px;height:5px;border-radius:50%}
+.pchip-num{font-family:'Syne',sans-serif;font-size:clamp(11px,1.3vw,14px);font-weight:800}
+.pchip-info{font-size:clamp(8px,.9vw,10px);color:var(--t2)}
+
+.empty-col{color:var(--t2);font-size:clamp(11px,1.2vw,13px);padding:20px 0}
+
+footer{padding:8px 40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:clamp(8px,.8vw,10px);color:var(--t2);letter-spacing:.06em;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="hdr-title">Pickup window</div>
+    <div class="hdr-sub">DRIVERS — WAIT OUTSIDE UNTIL YOUR NUMBER APPEARS BELOW</div>
+  </div>
+  <div class="hdr-right">
+    <span class="sync-dot" title="Live"></span>
+    <button class="hbtn" onclick="refreshScreen()">↻</button>
+    <button class="hbtn" id="mode-btn" onclick="toggleMode()">🌙</button>
+    <div class="clock" id="clock">--:--</div>
+    <div class="brand">Order<em>One</em></div>
+  </div>
+</header>
+
+<main>
+  <!-- DRIVER SPLIT NOTIFICATION -->
+  <div class="split-alert" id="split-alert">
+    <div class="split-title">Driver has multiple orders — split pickup</div>
+    <div class="split-cards" id="split-cards"></div>
+  </div>
+
+  <!-- TWO SECTION COLUMNS -->
+  <div class="section-row">
+    <!-- RESTAURANT -->
+    <div class="section-col">
+      <div class="sec-label">🍔 Restaurant — ready now</div>
+      <div class="ready-grid" id="rest-ready"></div>
+      <div class="sec-label" style="margin-top:8px">🍔 Restaurant — being prepared</div>
+      <div class="prep-chips" id="rest-prep"></div>
+      <div class="empty-col" id="rest-empty" style="display:none">No restaurant orders</div>
+    </div>
+    <!-- BAR -->
+    <div class="section-col">
+      <div class="sec-label">🍹 Bar — ready now</div>
+      <div class="ready-grid" id="bar-ready"></div>
+      <div class="sec-label" style="margin-top:8px">🍹 Bar — being prepared</div>
+      <div class="prep-chips" id="bar-prep"></div>
+      <div class="empty-col" id="bar-empty" style="display:none">No bar orders</div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>OrderOne — unified delivery management · UAE</span>
+  <span>Talabat · Noon · Careem · HungerStation · Deliveroo · InstaShop</span>
+  <span id="footer-time"></span>
+</footer>
+
+<script>
+var PLAT={
+  talabat:{label:'Talabat',color:'#FF6B35'},
+  noon:{label:'Noon',color:'#d4a800'},
+  careem:{label:'Careem',color:'#4CAF72'},
+  hungerstation:{label:'HungerStation',color:'#FF2D55'},
+  deliveroo:{label:'Deliveroo',color:'#00CCBC'},
+  instashop:{label:'InstaShop',color:'#A855F7'}
+};
+
+var orders=[
+  {id:1,num:'#1038',plat:'talabat',status:'ready',section:'rest',at:Date.now()-420000},
+  {id:2,num:'#2051',plat:'noon',status:'preparing',section:'rest',at:Date.now()-300000},
+  {id:3,num:'#3017',plat:'careem',status:'ready',section:'bar',at:Date.now()-360000},
+  {id:4,num:'#1041',plat:'talabat',status:'preparing',section:'rest',at:Date.now()-180000},
+  {id:5,num:'#5002',plat:'deliveroo',status:'preparing',section:'bar',at:Date.now()-90000},
+  {id:6,num:'#6011',plat:'hungerstation',status:'ready',section:'rest',at:Date.now()-500000},
+  // Driver split example — same driver has #1038 (ready) and #1041 (preparing)
+];
+
+var darkMode=true;
+
+function loadFromPOS(){
+  try{
+    var data=localStorage.getItem('orderone_kds');
+    if(data){
+      var loaded=JSON.parse(data);
+      orders=loaded.map(function(o){
+        return{id:o.id,num:o.num,plat:o.plat,status:o.status,section:o.section||'rest',at:o.at};
+      });
+    }
+  }catch(e){}
+}
+
+function toggleMode(){
+  darkMode=!darkMode;
+  document.body.classList.toggle('light',!darkMode);
+  document.getElementById('mode-btn').textContent=darkMode?'🌙':'☀️';
+}
+
+function refreshScreen(){render();}
+function waitEst(o){return'~'+Math.max(2,15-Math.floor((Date.now()-o.at)/60000))+'m';}
+
+function renderSection(readyId,prepId,emptyId,section){
+  var sOrders=orders.filter(function(o){return o.section===section;});
+  var ready=sOrders.filter(function(o){return o.status==='ready';});
+  var prep=sOrders.filter(function(o){return o.status==='preparing';});
+  var isBar=section==='bar';
+  var badgeClass=isBar?'bar':'rest';
+  var badgeText=isBar?'Bar — collect':'Restaurant — collect';
+  var tileClass=isBar?'bar-tile':'rest-tile';
+
+  var rh='';
+  ready.forEach(function(o){
+    var p=PLAT[o.plat];
+    rh+='<div class="rtile '+tileClass+'">';
+    rh+='<div class="tile-plat" style="color:'+p.color+'"><span class="tile-dot" style="background:'+p.color+'"></span>'+p.label+'</div>';
+    rh+='<div class="tile-num" style="color:'+p.color+'">'+o.num+'</div>';
+    rh+='<span class="tile-badge '+badgeClass+'">'+badgeText+'</span>';
+    rh+='</div>';
+  });
+  document.getElementById(readyId).innerHTML=rh;
+
+  var ph='';
+  prep.forEach(function(o){
+    var p=PLAT[o.plat];
+    ph+='<div class="pchip"><span class="pchip-dot" style="background:'+p.color+'"></span><span class="pchip-num" style="color:'+p.color+'">'+o.num+'</span><span class="pchip-info">'+p.label+' · '+waitEst(o)+'</span></div>';
+  });
+  document.getElementById(prepId).innerHTML=ph;
+  document.getElementById(emptyId).style.display=sOrders.length===0?'block':'none';
+}
+
+function renderDriverSplit(){
+  // Find drivers with multiple orders (same platform, one ready one preparing)
+  var readyOrders=orders.filter(function(o){return o.status==='ready';});
+  var prepOrders=orders.filter(function(o){return o.status==='preparing';});
+  var splits=[];
+  readyOrders.forEach(function(r){
+    prepOrders.forEach(function(p){
+      if(r.plat===p.plat){
+        splits.push({ready:r,prep:p});
+      }
+    });
+  });
+  var alert=document.getElementById('split-alert');
+  var cards=document.getElementById('split-cards');
+  if(!splits.length){alert.classList.remove('show');return;}
+  alert.classList.add('show');
+  var html='';
+  splits.slice(0,2).forEach(function(s){
+    var p=PLAT[s.ready.plat];
+    html+='<div style="flex:1;min-width:160px">';
+    html+='<div style="font-size:10px;color:'+p.color+';margin-bottom:8px;letter-spacing:.1em">'+p.label+' driver</div>';
+    html+='<div style="display:flex;gap:8px">';
+    html+='<div class="split-card ready-card"><div class="split-card-num" style="color:'+p.color+'">'+s.ready.num+'</div><div class="split-card-status">Ready — collect now</div></div>';
+    html+='<div class="split-card"><div class="split-card-num" style="color:'+p.color+'">'+s.prep.num+'</div><div class="split-card-status">'+waitEst(s.prep)+' — wait or return</div></div>';
+    html+='</div></div>';
+  });
+  cards.innerHTML=html;
+}
+
+function render(){
+  loadFromPOS();
+  renderSection('rest-ready','rest-prep','rest-empty','rest');
+  renderSection('bar-ready','bar-prep','bar-empty','bar');
+  renderDriverSplit();
+}
+
+function tick(){
+  var n=new Date(),pad=function(x){return x<10?'0'+x:x;};
+  document.getElementById('clock').textContent=pad(n.getHours())+':'+pad(n.getMinutes());
+  document.getElementById('footer-time').textContent=pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());
+}
+
+render();tick();
+setInterval(function(){tick();render();},5000);
+</script>
+</body>
+</html>
