@@ -161,11 +161,29 @@ var NOTES=['No onions please','Extra sauce','Allergic to nuts','Well done','No i
 var orders=[];
 var darkMode=true,activeFilter='all';
 
+function kitchenBeep(){
+  try{
+    var ctx=new(window.AudioContext||window.webkitAudioContext)();
+    // Deep kitchen bell — two low tones
+    [[220,.0],[330,.25]].forEach(function(pair){
+      var o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.frequency.value=pair[0];o.type='sine';
+      g.gain.setValueAtTime(0,ctx.currentTime+pair[1]);
+      g.gain.linearRampToValueAtTime(0.5,ctx.currentTime+pair[1]+.03);
+      g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+pair[1]+.5);
+      o.start(ctx.currentTime+pair[1]);
+      o.stop(ctx.currentTime+pair[1]+.6);
+    });
+  }catch(e){}
+}
+
 function loadFromPOS(){
   try{
     var data=localStorage.getItem('orderone_kds');
     if(data){
       var loaded=JSON.parse(data);
+      var gotNew=false;
       // Merge: keep local done states, add new orders from POS
       loaded.forEach(function(o){
         var existing=orders.find(function(x){return x.id===o.id;});
@@ -173,6 +191,7 @@ function loadFromPOS(){
           // New order from POS — add done:false to items
           o.items=o.items.map(function(it){return{qty:it.qty,name:it.name,done:false};});
           orders.unshift(o);
+          gotNew=true;
         } else {
           // Update status from POS but keep done states
           existing.status=o.status;
@@ -180,6 +199,7 @@ function loadFromPOS(){
       });
       // Remove orders that POS has deleted
       orders=orders.filter(function(o){return loaded.find(function(x){return x.id===o.id;});});
+      if(gotNew)kitchenBeep();
     }
   }catch(e){}
 }
