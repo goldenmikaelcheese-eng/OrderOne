@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>OrderOne — POS Terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --orange:#FF6B2C;--black:#0A0A0A;--white:#FAFAFA;
+  --gray:#888;--card:#141414;--border:rgba(255,255,255,0.08);
+  --green:#22c55e;--amber:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);min-height:100vh;max-width:400px;margin:0 auto;position:relative}
+
+/* HEADER */
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--black);z-index:50}
+.logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800}.logo span{color:var(--orange)}
+.header-right{display:flex;align-items:center;gap:10px}
+.live-dot{width:8px;height:8px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.live-text{font-size:12px;color:var(--green);font-weight:600}
+.theme-btn{background:var(--card);border:1px solid var(--border);color:var(--white);width:32px;height:32px;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--black);position:sticky;top:57px;z-index:40}
+.tab{flex:1;padding:12px 8px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;color:var(--gray);border-bottom:2px solid transparent;transition:all 0.2s}
+.tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+.tab-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;background:var(--orange);border-radius:9px;font-size:10px;color:var(--white);margin-left:4px;padding:0 4px}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:6px;padding:12px 16px;overflow-x:auto;border-bottom:1px solid var(--border)}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-btn{flex-shrink:0;padding:6px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--gray);font-size:12px;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.filter-btn.active{background:var(--orange);border-color:var(--orange);color:var(--white);font-weight:600}
+
+/* ADD ORDER */
+.add-bar{padding:12px 16px;border-bottom:1px solid var(--border)}
+.add-row{display:flex;gap:8px;margin-bottom:8px}
+.add-input{flex:1;background:var(--card);border:1px solid var(--border);color:var(--white);padding:10px 12px;border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif}
+.add-input:focus{outline:none;border-color:var(--orange)}
+.add-btn{background:var(--orange);color:var(--white);border:none;padding:10px 16px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+.platform-sel{display:flex;gap:6px;flex-wrap:wrap}
+.psel{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--gray);font-size:12px;cursor:pointer;transition:all 0.2s}
+.psel.active{font-weight:700;color:var(--white)}
+.psel[data-p="Talabat"].active{background:rgba(255,102,0,0.2);border-color:#FF6600}
+.psel[data-p="Noon"].active{background:rgba(252,205,0,0.2);border-color:#FCCD00;color:#FCCD00}
+.psel[data-p="Careem"].active{background:rgba(0,168,88,0.2);border-color:#00A858;color:#00A858}
+.psel[data-p="HungerStation"].active{background:rgba(229,0,75,0.2);border-color:#E5004B;color:#E5004B}
+.psel[data-p="Deliveroo"].active{background:rgba(0,205,157,0.2);border-color:#00CD9D;color:#00CD9D}
+.psel[data-p="InstaShop"].active{background:rgba(91,178,108,0.2);border-color:#5BB26C;color:#5BB26C}
+.section-sel{display:flex;gap:6px;margin-top:6px}
+.ssel{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--gray);font-size:12px;cursor:pointer}
+.ssel.active{background:rgba(255,107,44,0.15);border-color:var(--orange);color:var(--orange);font-weight:600}
+
+/* INCOMING BANNER */
+.incoming-banner{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:12px;margin:12px 16px;padding:16px;display:none}
+.incoming-banner.show{display:block;animation:slideIn 0.3s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.incoming-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.incoming-platform{font-family:'Syne',sans-serif;font-size:16px;font-weight:800}
+.incoming-num{font-size:13px;color:var(--gray)}
+.incoming-items{font-size:13px;color:var(--gray);margin-bottom:12px}
+.incoming-btns{display:flex;gap:8px}
+.accept-btn{flex:1;background:var(--green);color:var(--white);border:none;padding:10px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
+.reject-btn{flex:1;background:rgba(239,68,68,0.1);color:var(--red);border:1px solid var(--red);padding:10px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
+
+/* ORDERS */
+.orders-list{padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--gray)}
+.empty-state .big{font-size:48px;margin-bottom:12px}
+
+.order-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all 0.2s}
+.order-card.expired{border-color:var(--red);animation:flashRed 1s infinite}
+@keyframes flashRed{0%,100%{border-color:var(--red)}50%{border-color:rgba(239,68,68,0.3)}}
+.order-card.bar-order{border-left:3px solid var(--blue)}
+.order-card.restaurant-order{border-left:3px solid var(--orange)}
+
+.platform-stripe{height:5px;width:100%}
+.order-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 0}
+.order-platform{font-family:'Syne',sans-serif;font-size:17px;font-weight:800}
+.order-num{font-size:13px;color:var(--gray);font-family:'DM Mono',monospace}
+.order-meta{display:flex;align-items:center;gap:8px;padding:6px 16px}
+.order-time{font-size:12px;color:var(--gray)}
+.section-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px}
+.section-tag.bar{background:rgba(59,130,246,0.15);color:var(--blue)}
+.section-tag.restaurant{background:rgba(255,107,44,0.15);color:var(--orange)}
+
+.timer-bar-wrap{padding:0 16px 8px;display:flex;align-items:center;gap:8px}
+.timer-bar{flex:1;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden}
+.timer-fill{height:100%;border-radius:2px;transition:width 1s linear,background 1s linear}
+.timer-text{font-size:11px;font-family:'DM Mono',monospace;width:42px;text-align:right}
+
+.order-items-preview{padding:0 16px 10px;font-size:13px;color:var(--gray);cursor:pointer}
+.order-items-full{padding:0 16px 10px;display:none}
+.item-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.item-row:last-child{border-bottom:none}
+.item-name{color:var(--white)}
+.item-section{font-size:10px;color:var(--gray);font-weight:600}
+.item-price{color:var(--orange);font-weight:600;font-family:'DM Mono',monospace}
+.order-total{display:flex;justify-content:space-between;padding:10px 16px;border-top:1px solid var(--border);font-weight:700}
+.order-total span:last-child{color:var(--orange);font-family:'DM Mono',monospace}
+.order-notes{margin:0 16px 10px;padding:8px 12px;background:rgba(245,158,11,0.08);border-radius:6px;font-size:12px;color:var(--amber)}
+
+.box-alert{margin:0 16px 10px;padding:8px 12px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:6px;font-size:12px;color:var(--amber);display:flex;align-items:center;gap:6px}
+.box-alert::before{content:'📦';font-size:14px}
+
+.order-actions{display:flex;gap:8px;padding:0 16px 14px}
+.action-btn{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.15s}
+.ready-btn{background:var(--green);color:var(--white)}
+.ready-btn:hover{filter:brightness(1.1)}
+.collected-btn{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid var(--green)!important}
+.collected-btn:hover{background:rgba(34,197,94,0.2)}
+.reprint-btn{background:var(--card);color:var(--gray);border:1px solid var(--border)!important;flex:0 0 auto;padding:10px 14px}
+.expired-dismiss{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid var(--red)!important;width:100%;text-align:center}
+
+/* STATS PANEL */
+.stats-bar{display:flex;gap:1px;background:var(--border);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stat-cell{flex:1;padding:12px 8px;text-align:center;background:var(--black)}
+.stat-num{font-family:'Syne',sans-serif;font-size:20px;font-weight:800}
+.stat-lbl{font-size:11px;color:var(--gray);margin-top:2px}
+
+/* DISPLAY TAB */
+.display-screen{min-height:80vh;background:#0A0A0A;padding:24px 16px;display:flex;flex-direction:column}
+.display-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--gray);text-align:center;margin-bottom:24px;letter-spacing:2px}
+.driver-notice{background:rgba(255,107,44,0.1);border:1px solid rgba(255,107,44,0.2);border-radius:8px;padding:12px 16px;font-size:12px;color:var(--gray);text-align:center;margin-bottom:20px}
+.ready-orders{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.pickup-card{background:var(--card);border-radius:12px;padding:20px 16px;text-align:center;border:1px solid var(--border)}
+.pickup-card.bar{border-color:var(--blue);background:rgba(59,130,246,0.06)}
+.pickup-card.restaurant{border-color:var(--green);background:rgba(34,197,94,0.06)}
+.pickup-platform{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase}
+.pickup-num{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1}
+.pickup-counter{font-size:11px;color:var(--gray);margin-top:6px}
+.pickup-ready{font-size:11px;color:var(--green);font-weight:600;margin-top:4px}
+.preparing-section{border-top:1px solid var(--border);padding-top:20px}
+.prep-title{font-size:12px;color:var(--gray);margin-bottom:12px;font-weight:600}
+.prep-chips{display:flex;flex-wrap:wrap;gap:8px}
+.prep-chip{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:12px}
+.prep-chip .pnum{font-family:'Syne',sans-serif;font-weight:800;font-size:16px}
+.prep-chip .peta{color:var(--amber);font-size:11px;margin-top:2px}
+
+/* TOAST */
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-size:14px;font-weight:600;z-index:999;transition:transform 0.3s ease;max-width:320px;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* LIGHT MODE */
+body.light{background:#F4F4F4;color:#0A0A0A}
+body.light .header,body.light .tabs,body.light .add-bar,body.light .filter-bar,body.light .stats-bar{background:#F4F4F4}
+body.light .stat-cell{background:#F4F4F4}
+body.light .order-card,body.light .add-input,body.light .display-screen,body.light .reprint-btn{background:#FFFFFF}
+body.light .filter-btn,body.light .psel,body.light .ssel{color:#555}
+body.light .order-time,body.light .order-num,body.light .stat-lbl,body.light .gray{color:#666}
+
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">Order<span>1</span></div>
+  <div class="header-right">
+    <div class="live-dot"></div><span class="live-text">LIVE</span>
+    <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    <button class="theme-btn" onclick="refreshAll()" title="Refresh">↻</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" id="tab-orders" onclick="switchTab('orders')">
+    Orders <span class="tab-badge" id="active-badge">0</span>
+  </div>
+  <div class="tab" id="tab-display" onclick="switchTab('display')">Display</div>
+  <div class="tab" id="tab-menu" onclick="switchTab('menu')">Menu</div>
+</div>
+
+<!-- ============ ORDERS TAB ============ -->
+<div id="panel-orders">
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter('All')" id="filter-All">All</button>
+    <button class="filter-btn" onclick="setFilter('Talabat')" id="filter-Talabat">🟠 Talabat</button>
+    <button class="filter-btn" onclick="setFilter('Noon')" id="filter-Noon">🟡 Noon</button>
+    <button class="filter-btn" onclick="setFilter('Careem')" id="filter-Careem">🟢 Careem</button>
+    <button class="filter-btn" onclick="setFilter('HungerStation')" id="filter-HungerStation">🔴 Hunger</button>
+    <button class="filter-btn" onclick="setFilter('Deliveroo')" id="filter-Deliveroo">🩵 Deliveroo</button>
+    <button class="filter-btn" onclick="setFilter('InstaShop')" id="filter-InstaShop">💚 InstaShop</button>
+    <button class="filter-btn" onclick="setFilter('ready')" id="filter-ready">Ready</button>
+    <button class="filter-btn" onclick="setFilter('bar')" id="filter-bar">🍹 Bar</button>
+  </div>
+
+  <!-- Add order bar -->
+  <div class="add-bar">
+    <div class="add-row">
+      <input class="add-input" id="order-input" placeholder="Order # (e.g. 1042)" onkeypress="if(event.key==='Enter')addOrder()">
+      <button class="add-btn" onclick="addOrder()">+</button>
+    </div>
+    <div class="platform-sel" id="platform-sel">
+      <button class="psel active" data-p="Talabat" onclick="selP(this)">Talabat</button>
+      <button class="psel" data-p="Noon" onclick="selP(this)">Noon</button>
+      <button class="psel" data-p="Careem" onclick="selP(this)">Careem</button>
+      <button class="psel" data-p="HungerStation" onclick="selP(this)">Hunger</button>
+      <button class="psel" data-p="Deliveroo" onclick="selP(this)">Deliveroo</button>
+      <button class="psel" data-p="InstaShop" onclick="selP(this)">InstaShop</button>
+    </div>
+    <div class="section-sel">
+      <button class="ssel active" data-s="restaurant" onclick="selS(this)">🍔 Restaurant</button>
+      <button class="ssel" data-s="bar" onclick="selS(this)">🍹 Bar</button>
+    </div>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="stat-cell"><div class="stat-num" id="s-active">0</div><div class="stat-lbl">Active</div></div>
+    <div class="stat-cell"><div class="stat-num" id="s-ready">0</div><div class="stat-lbl">Ready</div></div>
+    <div class="stat-cell"><div class="stat-num" id="s-done">0</div><div class="stat-lbl">Done</div></div>
+    <div class="stat-cell"><div class="stat-num" id="s-rev" style="color:var(--orange)">0</div><div class="stat-lbl">Revenue</div></div>
+  </div>
+
+  <!-- Incoming banner -->
+  <div class="incoming-banner" id="incoming-banner">
+    <div class="incoming-top">
+      <span class="incoming-platform" id="inc-platform">Talabat</span>
+      <span class="incoming-num" id="inc-num">#1042</span>
+    </div>
+    <div class="incoming-items" id="inc-items">Loading items...</div>
+    <div class="incoming-btns">
+      <button class="accept-btn" onclick="acceptOrder()">✓ Accept</button>
+      <button class="reject-btn" onclick="rejectOrder()">✗ Reject</button>
+    </div>
+  </div>
+
+  <!-- Orders list -->
+  <div class="orders-list" id="orders-list">
+    <div class="empty-state">
+      <div class="big">📋</div>
+      <p>No orders yet</p>
+      <p style="font-size:13px;color:var(--gray);margin-top:4px">Add an order above to begin</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DISPLAY TAB ============ -->
+<div id="panel-display" class="hidden">
+  <div class="display-screen">
+    <div class="display-title">PICKUP SCREEN — ORDER STATUS</div>
+    <div class="driver-notice">📦 Drivers: Wait outside — your number will appear here when ready</div>
+    <div class="ready-orders" id="pickup-ready-grid"></div>
+    <div class="preparing-section">
+      <div class="prep-title">⏳ Being Prepared</div>
+      <div class="prep-chips" id="pickup-prep-chips"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MENU TAB ============ -->
+<div id="panel-menu" class="hidden">
+  <div style="padding:20px;text-align:center;color:var(--gray)">
+    <div style="font-size:48px;margin-bottom:12px">🍽️</div>
+    <p style="font-weight:600">Menu management</p>
+    <p style="font-size:13px;margin-top:8px">Open the full Menu Tablet on a separate device</p>
+    <a href="menu.html" style="display:inline-block;margin-top:16px;background:var(--orange);color:#fff;padding:12px 24px;border-radius:8px;font-weight:700;text-decoration:none">Open Menu Tablet →</a>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+const PLATFORMS = {
+  Talabat:{color:'#FF6600',emoji:'🟠'},
+  Noon:{color:'#FCCD00',emoji:'🟡'},
+  Careem:{color:'#00A858',emoji:'🟢'},
+  HungerStation:{color:'#E5004B',emoji:'🔴'},
+  Deliveroo:{color:'#00CD9D',emoji:'🩵'},
+  InstaShop:{color:'#5BB26C',emoji:'💚'}
+};
+const MENU = [
+  {name:'Smash Burger',section:'restaurant',price:42},{name:'Double Cheese',section:'restaurant',price:52},
+  {name:'Crispy Chicken',section:'restaurant',price:45},{name:'Loaded Fries',section:'restaurant',price:28},
+  {name:'Onion Rings',section:'restaurant',price:22},{name:'Caesar Salad',section:'restaurant',price:35},
+  {name:'Chocolate Shake',section:'bar',price:28},{name:'Mango Juice',section:'bar',price:18},
+  {name:'Lemonade',section:'bar',price:16},{name:'Iced Coffee',section:'bar',price:22},
+  {name:'Sparkling Water',section:'bar',price:10},{name:'Mixed Lemonade',section:'bar',price:20}
+];
+
+let orders = [];
+let pendingOrder = null;
+let currentFilter = 'All';
+let selectedPlatform = 'Talabat';
+let selectedSection = 'restaurant';
+let totalRevenue = 0;
+let doneCount = 0;
+let darkMode = true;
+
+function getRandomItems(section) {
+  const pool = MENU.filter(m => m.section === section);
+  const n = Math.floor(Math.random()*2)+1;
+  const picked = [];
+  for(let i=0;i<n;i++) picked.push(pool[Math.floor(Math.random()*pool.length)]);
+  return picked;
+}
+
+function playBeep(platform) {
+  const freqs = {Talabat:880,Noon:660,Careem:770,HungerStation:550,Deliveroo:990,InstaShop:700};
+  try {
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = freqs[platform]||800;
+    o.type = 'sine';
+    g.gain.setValueAtTime(0.3,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.4);
+    o.start(ctx.currentTime); o.stop(ctx.currentTime+0.4);
+  } catch(e){}
+}
+
+function showToast(msg, duration=2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), duration);
+}
+
+function addOrder() {
+  const inp = document.getElementById('order-input');
+  const num = inp.value.trim() || ('#'+Math.floor(1000+Math.random()*8999));
+  inp.value = '';
+  const items = getRandomItems(selectedSection);
+  const total = items.reduce((s,i)=>s+i.price,0);
+  
+  pendingOrder = {
+    id: Date.now(),
+    num,
+    platform: selectedPlatform,
+    section: selectedSection,
+    items,
+    total,
+    status: 'pending',
+    time: Date.now(),
+    readyAt: null,
+    cancelTimer: null
+  };
+
+  const banner = document.getElementById('incoming-banner');
+  document.getElementById('inc-platform').textContent = selectedPlatform;
+  document.getElementById('inc-platform').style.color = PLATFORMS[selectedPlatform].color;
+  document.getElementById('inc-num').textContent = num;
+  document.getElementById('inc-items').textContent = items.map(i=>i.name).join(', ')+' — AED '+total;
+  banner.classList.add('show');
+  playBeep(selectedPlatform);
+  updateSync();
+}
+
+function acceptOrder() {
+  if(!pendingOrder) return;
+  pendingOrder.status = 'active';
+  orders.push(pendingOrder);
+  document.getElementById('incoming-banner').classList.remove('show');
+  pendingOrder = null;
+  render();
+  showToast('✓ Order accepted');
+  updateSync();
+}
+
+function rejectOrder() {
+  pendingOrder = null;
+  document.getElementById('incoming-banner').classList.remove('show');
+  showToast('✗ Order rejected');
+}
+
+function markReady(id) {
+  const o = orders.find(x=>x.id===id);
+  if(!o) return;
+  o.status = 'ready';
+  o.readyAt = Date.now();
+  showToast('✓ Order marked ready — driver will be notified');
+  render();
+  updateSync();
+}
+
+function markCollected(id) {
+  const o = orders.find(x=>x.id===id);
+  if(!o) return;
+  totalRevenue += o.total;
+  doneCount++;
+  orders = orders.filter(x=>x.id!==id);
+  showToast('✓ Collected — AED '+o.total+' recorded');
+  render();
+  updateSync();
+}
+
+function dismissExpired(id) {
+  orders = orders.filter(x=>x.id!==id);
+  render();
+  updateSync();
+}
+
+function reprint(id) {
+  const o = orders.find(x=>x.id===id);
+  if(!o) return;
+  showToast('🖨️ Reprinting receipt...');
+  setTimeout(()=>showToast('✓ Printed'),1000);
+}
+
+function toggleExpand(id) {
+  const el = document.getElementById('items-full-'+id);
+  const preview = document.getElementById('items-preview-'+id);
+  if(el.style.display==='block'){
+    el.style.display='none';
+    preview.style.display='block';
+  } else {
+    el.style.display='block';
+    preview.style.display='none';
+  }
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  const el = document.getElementById('filter-'+f);
+  if(el) el.classList.add('active');
+  render();
+}
+
+function selP(btn) {
+  document.querySelectorAll('.psel').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedPlatform = btn.dataset.p;
+}
+
+function selS(btn) {
+  document.querySelectorAll('.ssel').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedSection = btn.dataset.s;
+}
+
+function switchTab(t) {
+  ['orders','display','menu'].forEach(id=>{
+    document.getElementById('panel-'+id).classList.add('hidden');
+    document.getElementById('tab-'+id).classList.remove('active');
+  });
+  document.getElementById('panel-'+t).classList.remove('hidden');
+  document.getElementById('tab-'+t).classList.add('active');
+  if(t==='display') renderDisplay();
+}
+
+function getTimerColor(elapsed, limit) {
+  const pct = elapsed/limit;
+  if(pct<0.5) return 'var(--green)';
+  if(pct<0.8) return 'var(--amber)';
+  return 'var(--red)';
+}
+
+function render() {
+  let filtered = orders;
+  if(currentFilter === 'ready') filtered = orders.filter(o=>o.status==='ready');
+  else if(currentFilter === 'bar') filtered = orders.filter(o=>o.section==='bar');
+  else if(currentFilter !== 'All') filtered = orders.filter(o=>o.platform===currentFilter);
+
+  const active = orders.filter(o=>o.status==='active').length;
+  const ready = orders.filter(o=>o.status==='ready').length;
+  document.getElementById('s-active').textContent = active;
+  document.getElementById('s-ready').textContent = ready;
+  document.getElementById('s-done').textContent = doneCount;
+  document.getElementById('s-rev').textContent = totalRevenue;
+  document.getElementById('active-badge').textContent = active + ready;
+
+  const list = document.getElementById('orders-list');
+  if(!filtered.length) {
+    list.innerHTML = '<div class="empty-state"><div class="big">📋</div><p>No orders</p></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(o => {
+    const pc = PLATFORMS[o.platform]?.color || '#888';
+    const elapsed = Math.floor((Date.now()-o.time)/1000);
+    const readyElapsed = o.readyAt ? Math.floor((Date.now()-o.readyAt)/1000) : 0;
+    const LIMIT = 600; // 10 min
+    const expired = o.status==='ready' && readyElapsed > LIMIT;
+    const timerPct = o.status==='ready' ? Math.min(100,(readyElapsed/LIMIT)*100) : Math.min(100,(elapsed/1200)*100);
+    const timerColor = o.status==='ready' ? getTimerColor(readyElapsed,LIMIT) : getTimerColor(elapsed,1200);
+    const timerSecs = o.status==='ready' ? (LIMIT - readyElapsed) : elapsed;
+    const timerLabel = o.status==='ready' ? (expired ? 'EXPIRED' : 'Auto-cancel '+formatTime(LIMIT-readyElapsed)) : formatTime(elapsed)+' ago';
+    
+    return `<div class="order-card ${expired?'expired':''} ${o.section}-order" id="card-${o.id}">
+      <div class="platform-stripe" style="background:${pc}"></div>
+      <div class="order-head">
+        <span class="order-platform" style="color:${pc}">${o.platform}</span>
+        <span class="order-num">${o.num}</span>
+      </div>
+      <div class="order-meta">
+        <span class="order-time">${timerLabel}</span>
+        <span class="section-tag ${o.section}">${o.section==='bar'?'🍹 Bar':'🍔 Restaurant'}</span>
+        ${o.status==='ready'?'<span style="font-size:11px;color:var(--green);font-weight:600">READY</span>':''}
+      </div>
+      <div class="timer-bar-wrap">
+        <div class="timer-bar"><div class="timer-fill" style="width:${timerPct}%;background:${timerColor}"></div></div>
+        <div class="timer-text" style="color:${timerColor}">${o.status==='ready'?(expired?'⚠️':formatTime(Math.max(0,LIMIT-readyElapsed))):''}</div>
+      </div>
+      <div class="order-items-preview" id="items-preview-${o.id}" onclick="toggleExpand(${o.id})">
+        ${o.items.map(i=>i.name).join(', ')} <span style="color:var(--orange);font-weight:600">AED ${o.total}</span> ▾
+      </div>
+      <div class="order-items-full" id="items-full-${o.id}">
+        ${o.items.map(i=>`<div class="item-row"><div><div class="item-name">${i.name}</div><div class="item-section">${i.section}</div></div><div class="item-price">AED ${i.price}</div></div>`).join('')}
+        <div class="order-total"><span>Total</span><span>AED ${o.total}</span></div>
+      </div>
+      ${o.status==='ready'?'<div class="box-alert">Remind driver: bring packaging box before collecting</div>':''}
+      <div class="order-actions">
+        ${expired 
+          ? `<button class="action-btn expired-dismiss" onclick="dismissExpired(${o.id})">⚠️ Expired — dismiss</button>`
+          : o.status==='active' 
+            ? `<button class="action-btn ready-btn" onclick="markReady(${o.id})">Mark ready ✓</button>`
+            : `<button class="action-btn collected-btn" onclick="markCollected(${o.id})">Collected ✓</button>`
+        }
+        ${!expired?`<button class="action-btn reprint-btn" onclick="reprint(${o.id})">🖨️</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  renderDisplay();
+}
+
+function formatTime(s) {
+  if(s<0) return '0:00';
+  const m = Math.floor(s/60), sec = s%60;
+  return m+':'+(sec<10?'0'+sec:sec);
+}
+
+function renderDisplay() {
+  const readyOrders = orders.filter(o=>o.status==='ready');
+  const activeOrders = orders.filter(o=>o.status==='active');
+
+  const grid = document.getElementById('pickup-ready-grid');
+  if(grid) grid.innerHTML = readyOrders.length 
+    ? readyOrders.map(o=>`<div class="pickup-card ${o.section}">
+        <div class="pickup-platform" style="color:${PLATFORMS[o.platform]?.color}">${PLATFORMS[o.platform]?.emoji} ${o.platform}</div>
+        <div class="pickup-num">${o.num}</div>
+        <div class="pickup-counter">${o.section==='bar'?'🍹 Bar Counter':'🍔 Restaurant Counter'}</div>
+        <div class="pickup-ready">✓ READY NOW</div>
+      </div>`).join('')
+    : '<div style="grid-column:1/-1;text-align:center;color:var(--gray);padding:40px 0;font-size:14px">No orders ready yet</div>';
+
+  const chips = document.getElementById('pickup-prep-chips');
+  if(chips) chips.innerHTML = activeOrders.length
+    ? activeOrders.map(o=>`<div class="prep-chip">
+        <div class="pnum" style="color:${PLATFORMS[o.platform]?.color}">${o.num}</div>
+        <div style="font-size:11px;color:var(--gray)">${o.platform}</div>
+        <div class="peta">~${Math.floor(Math.random()*8+2)} min</div>
+      </div>`).join('')
+    : '<div style="color:var(--gray);font-size:13px">Kitchen is clear</div>';
+}
+
+function updateSync() {
+  const state = {orders, totalRevenue, doneCount, ts: Date.now()};
+  try { localStorage.setItem('orderone_state', JSON.stringify(state)); } catch(e){}
+}
+
+function refreshAll() {
+  showToast('↻ Refreshed');
+  render();
+}
+
+function toggleTheme() {
+  darkMode = !darkMode;
+  document.body.classList.toggle('light', !darkMode);
+  document.querySelector('.theme-btn').textContent = darkMode ? '🌙' : '☀️';
+}
+
+// Tick every second for timers
+setInterval(()=>{ render(); }, 1000);
+
+render();
+</script>
+</body>
+</html>
