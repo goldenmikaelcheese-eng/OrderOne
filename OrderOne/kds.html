@@ -3,26 +3,227 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OrderOne — Loading Kitchen Display...</title>
+<title>OrderOne — Kitchen Display</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-body{margin:0;background:#0A0A0A;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif;flex-direction:column;gap:16px}
-.logo{font-family:sans-serif;font-size:28px;font-weight:900}.logo span{color:#FF6B2C}
-.msg{color:#888;font-size:14px}
-.spinner{width:40px;height:40px;border:3px solid rgba(255,107,44,0.2);border-top-color:#FF6B2C;border-radius:50%;animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-a{color:#FF6B2C;font-size:14px;margin-top:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#FF6B2C;--black:#0A0A0A;--card:#141414;--border:rgba(255,255,255,0.08);--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--white:#F8F8F8;--gray:#888}
+body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);min-height:100vh}
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--border);background:var(--black);position:sticky;top:0;z-index:50}
+.logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800}.logo span{color:var(--orange)}
+.header-right{display:flex;align-items:center;gap:12px}
+.live{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green);font-weight:600}
+.live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.screen-label{font-size:12px;color:var(--gray);font-family:'DM Mono',monospace}
+.theme-btn{background:var(--card);border:1px solid var(--border);color:var(--white);width:32px;height:32px;border-radius:6px;cursor:pointer;font-size:14px}
+.refresh-btn{background:var(--card);border:1px solid var(--border);color:var(--white);width:32px;height:32px;border-radius:6px;cursor:pointer;font-size:14px}
+
+.stats-bar{display:flex;gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.stat-cell{flex:1;padding:12px 8px;text-align:center;background:var(--black)}
+.stat-num{font-family:'Syne',sans-serif;font-size:22px;font-weight:800}
+.stat-lbl{font-size:11px;color:var(--gray);margin-top:2px}
+
+.orders-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;padding:20px}
+.empty-state{text-align:center;padding:80px 20px;color:var(--gray)}
+.empty-state .big{font-size:56px;margin-bottom:16px}
+
+.order-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all 0.2s}
+.order-card.urgent{border-color:var(--red);animation:flashRed 1s infinite}
+@keyframes flashRed{0%,100%{border-color:var(--red)}50%{border-color:rgba(239,68,68,0.3)}}
+.order-card.bar-order{border-left:3px solid #3b82f6}
+.order-card.restaurant-order{border-left:3px solid var(--orange)}
+
+.platform-stripe{height:5px}
+.card-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 0}
+.card-platform{font-family:'Syne',sans-serif;font-size:18px;font-weight:800}
+.card-num{font-size:13px;color:var(--gray);font-family:'DM Mono',monospace}
+.card-meta{display:flex;align-items:center;gap:8px;padding:6px 16px 10px}
+.card-time{font-size:12px;color:var(--gray)}
+.section-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px}
+.section-tag.bar{background:rgba(59,130,246,0.15);color:#3b82f6}
+.section-tag.restaurant{background:rgba(255,107,44,0.15);color:var(--orange)}
+
+.timer-wrap{padding:0 16px 10px;display:flex;align-items:center;gap:8px}
+.timer-bar{flex:1;height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden}
+.timer-fill{height:100%;border-radius:3px;transition:width 1s linear,background 1s linear}
+.timer-text{font-size:11px;font-family:'DM Mono',monospace;width:40px;text-align:right}
+
+.items-list{padding:0 16px 10px;border-top:1px solid var(--border)}
+.item-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:opacity 0.2s}
+.item-row.done{opacity:0.35;text-decoration:line-through}
+.item-row:last-child{border-bottom:none}
+.item-name{font-size:13px}
+.item-section{font-size:10px;color:var(--gray);margin-top:2px}
+.item-check{width:22px;height:22px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;background:rgba(255,255,255,0.04);flex-shrink:0}
+.item-row.done .item-check{background:var(--green);border-color:var(--green)}
+
+.card-notes{margin:0 16px 10px;padding:8px 12px;background:rgba(245,158,11,0.08);border-radius:6px;font-size:12px;color:var(--amber)}
+.card-actions{padding:0 16px 14px}
+.ready-btn{width:100%;background:var(--green);color:#fff;border:none;padding:10px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:filter 0.2s}
+.ready-btn:hover{filter:brightness(1.1)}
+.ready-btn:disabled{background:rgba(34,197,94,0.2);color:var(--green);cursor:not-allowed}
+
+body.light{background:#F0F0F0;color:#0A0A0A}
+body.light .header,body.light .stat-cell,body.light .stats-bar{background:#F0F0F0}
+body.light .order-card{background:#fff}
 </style>
 </head>
 <body>
-<div class="logo">Order<span>1</span></div>
-<div class="spinner"></div>
-<div class="msg">Loading Kitchen Display...</div>
-<a href="https://goldenmikaelcheese-eng.github.io/OrderOne/OrderOne/KDS.html">If page doesn't load, click here</a>
+<div class="header">
+  <div class="logo">Order<span>1</span> <span style="font-size:13px;color:var(--gray);font-weight:400;margin-left:8px">Kitchen Display</span></div>
+  <div class="header-right">
+    <div class="live"><div class="live-dot"></div>LIVE</div>
+    <span class="screen-label">KDS</span>
+    <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    <button class="refresh-btn" onclick="refresh()">↻</button>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-cell"><div class="stat-num" id="s-active">0</div><div class="stat-lbl">Active</div></div>
+  <div class="stat-cell"><div class="stat-num" id="s-urgent" style="color:var(--red)">0</div><div class="stat-lbl">Urgent</div></div>
+  <div class="stat-cell"><div class="stat-num" id="s-done" style="color:var(--green)">0</div><div class="stat-lbl">Done today</div></div>
+</div>
+
+<div class="orders-grid" id="orders-grid">
+  <div class="empty-state"><div class="big">👨‍🍳</div><p style="font-size:16px;font-weight:600">Kitchen is clear</p><p style="font-size:13px;margin-top:8px;color:var(--gray)">New orders will appear here automatically</p></div>
+</div>
+
 <script>
-// Load the actual file from GitHub while you upload the real file to cPanel
-setTimeout(()=>{
-  window.location.href = 'https://goldenmikaelcheese-eng.github.io/OrderOne/OrderOne/KDS.html';
-}, 1500);
+const PLATFORMS={Talabat:{color:'#FF6600'},Noon:{color:'#FCCD00'},Careem:{color:'#00A858'},HungerStation:{color:'#E5004B'},Deliveroo:{color:'#00CD9D'},InstaShop:{color:'#5BB26C'}};
+const MENU=[
+  {name:'Smash Burger',section:'restaurant'},{name:'Double Cheese',section:'restaurant'},
+  {name:'Crispy Chicken',section:'restaurant'},{name:'Loaded Fries',section:'restaurant'},
+  {name:'Onion Rings',section:'restaurant'},{name:'Caesar Salad',section:'restaurant'},
+  {name:'Chocolate Shake',section:'bar'},{name:'Mango Juice',section:'bar'},
+  {name:'Lemonade',section:'bar'},{name:'Iced Coffee',section:'bar'},
+];
+
+let orders=[];
+let doneCount=0;
+let darkMode=true;
+let lastOrderCount=0;
+
+function playKitchenBeep(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [440,550].forEach((f,i)=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.frequency.value=f;o.type='triangle';
+      const t=ctx.currentTime+i*0.15;
+      g.gain.setValueAtTime(0.4,t);
+      g.gain.exponentialRampToValueAtTime(0.001,t+0.3);
+      o.start(t);o.stop(t+0.3);
+    });
+  }catch(e){}
+}
+
+function loadFromPOS(){
+  try{
+    const state=JSON.parse(localStorage.getItem('orderone_state')||'{}');
+    if(state.orders){
+      const active=state.orders.filter(o=>o.status==='active'||o.status==='ready');
+      if(active.length>lastOrderCount) playKitchenBeep();
+      lastOrderCount=active.length;
+      orders=active.map(o=>({
+        id:o.id,
+        num:o.num,
+        platform:o.platform,
+        section:o.section||'restaurant',
+        items:(o.items||[{name:'Order items',section:'restaurant'}]).map(i=>({...i,done:false})),
+        time:o.time,
+        status:o.status,
+        notes:o.notes||''
+      }));
+    }
+  }catch(e){}
+}
+
+function markItemDone(orderId,itemIdx){
+  const o=orders.find(x=>x.id===orderId);
+  if(!o)return;
+  o.items[itemIdx].done=!o.items[itemIdx].done;
+  render();
+}
+
+function markOrderReady(orderId){
+  try{
+    const state=JSON.parse(localStorage.getItem('orderone_state')||'{}');
+    if(state.orders){
+      const o=state.orders.find(x=>x.id===orderId);
+      if(o){o.status='ready';o.readyAt=Date.now();}
+      localStorage.setItem('orderone_state',JSON.stringify(state));
+    }
+  }catch(e){}
+  doneCount++;
+  render();
+}
+
+function formatTime(s){if(s<60)return s+'s';return Math.floor(s/60)+'m '+s%60+'s';}
+
+function getTimerColor(elapsed){
+  if(elapsed<300)return'var(--green)';
+  if(elapsed<600)return'var(--amber)';
+  return'var(--red)';
+}
+
+function render(){
+  loadFromPOS();
+  const urgent=orders.filter(o=>(Date.now()-o.time)/1000>600).length;
+  document.getElementById('s-active').textContent=orders.length;
+  document.getElementById('s-urgent').textContent=urgent;
+  document.getElementById('s-done').textContent=doneCount;
+
+  const grid=document.getElementById('orders-grid');
+  if(!orders.length){
+    grid.innerHTML='<div class="empty-state"><div class="big">👨‍🍳</div><p style="font-size:16px;font-weight:600">Kitchen is clear</p><p style="font-size:13px;margin-top:8px;color:var(--gray)">New orders will appear here automatically</p></div>';
+    return;
+  }
+
+  grid.innerHTML=orders.map(o=>{
+    const elapsed=Math.floor((Date.now()-o.time)/1000);
+    const isUrgent=elapsed>600;
+    const pc=PLATFORMS[o.platform]?.color||'#888';
+    const timerPct=Math.min(100,(elapsed/900)*100);
+    const timerColor=getTimerColor(elapsed);
+    const allDone=o.items.every(i=>i.done);
+    return`<div class="order-card ${isUrgent?'urgent':''} ${o.section}-order">
+      <div class="platform-stripe" style="background:${pc}"></div>
+      <div class="card-head">
+        <span class="card-platform" style="color:${pc}">${o.platform}</span>
+        <span class="card-num">${o.num}</span>
+      </div>
+      <div class="card-meta">
+        <span class="card-time">${formatTime(elapsed)} ago${isUrgent?' ⚠️':''}</span>
+        <span class="section-tag ${o.section}">${o.section==='bar'?'🍹 Bar':'🍔 Restaurant'}</span>
+      </div>
+      <div class="timer-wrap">
+        <div class="timer-bar"><div class="timer-fill" style="width:${timerPct}%;background:${timerColor}"></div></div>
+        <div class="timer-text" style="color:${timerColor}">${formatTime(elapsed)}</div>
+      </div>
+      <div class="items-list">
+        ${o.items.map((item,idx)=>`<div class="item-row ${item.done?'done':''}" onclick="markItemDone(${o.id},${idx})">
+          <div><div class="item-name">${item.name}</div><div class="item-section">${item.section||''}</div></div>
+          <div class="item-check">${item.done?'✓':''}</div>
+        </div>`).join('')}
+      </div>
+      ${o.notes?`<div class="card-notes">📝 ${o.notes}</div>`:''}
+      <div class="card-actions">
+        <button class="ready-btn" ${allDone?'':'disabled'} onclick="markOrderReady(${o.id})">
+          ${allDone?'✓ Mark Ready':'Tick all items first'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleTheme(){darkMode=!darkMode;document.body.classList.toggle('light',!darkMode);document.querySelector('.theme-btn').textContent=darkMode?'🌙':'☀️';}
+function refresh(){render();}
+
+setInterval(render,3000);
+render();
 </script>
 </body>
 </html>

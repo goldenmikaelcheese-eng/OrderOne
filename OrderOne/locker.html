@@ -3,26 +3,260 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OrderOne — Loading OrderOne Locker...</title>
+<title>OrderOne — Locker Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-body{margin:0;background:#0A0A0A;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif;flex-direction:column;gap:16px}
-.logo{font-family:sans-serif;font-size:28px;font-weight:900}.logo span{color:#FF6B2C}
-.msg{color:#888;font-size:14px}
-.spinner{width:40px;height:40px;border:3px solid rgba(255,107,44,0.2);border-top-color:#FF6B2C;border-radius:50%;animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-a{color:#FF6B2C;font-size:14px;margin-top:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#FF6B2C;--black:#0A0A0A;--card:#141414;--border:rgba(255,255,255,0.08);--green:#22c55e;--amber:#f59e0b;--white:#F8F8F8;--gray:#888}
+body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);min-height:100vh}
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--border)}
+.logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800}.logo span{color:var(--orange)}
+.badge{background:rgba(255,107,44,0.1);border:1px solid rgba(255,107,44,0.2);color:var(--orange);padding:4px 12px;border-radius:100px;font-size:12px;font-weight:700}
+
+.main{max-width:900px;margin:0 auto;padding:32px 24px}
+.title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+.title span{color:var(--orange)}
+.subtitle{font-size:15px;color:var(--gray);margin-bottom:40px;max-width:540px;line-height:1.6}
+
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
+@media(max-width:600px){.demo-grid{grid-template-columns:1fr}}
+
+/* PANELS */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
+.panel-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase}
+.panel-sub{font-size:12px;color:var(--gray);margin-bottom:20px}
+
+/* SLOTS */
+.slots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.slot{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:16px 12px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
+.slot:hover{border-color:rgba(255,107,44,0.3);background:rgba(255,107,44,0.05)}
+.slot.filled{border-color:var(--amber);background:rgba(245,158,11,0.08);cursor:default}
+.slot.unlocked{border-color:var(--green);background:rgba(34,197,94,0.08);animation:glow 0.5s ease}
+.slot.empty-available{border-color:rgba(34,197,94,0.2);border-style:dashed}
+@keyframes glow{0%{box-shadow:0 0 0 0 rgba(34,197,94,0.4)}100%{box-shadow:0 0 0 8px rgba(34,197,94,0)}}
+.slot-num{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;line-height:1;margin-bottom:6px}
+.slot-status{font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
+.slot.filled .slot-status{color:var(--amber)}
+.slot.unlocked .slot-status{color:var(--green)}
+.slot.empty-available .slot-status{color:rgba(34,197,94,0.5)}
+.slot-platform{font-size:10px;color:var(--gray);margin-top:4px;font-family:'DM Mono',monospace}
+.slot-icon{font-size:20px;margin-bottom:6px}
+
+/* ADD ORDER */
+.add-section{margin-bottom:16px}
+.add-row{display:flex;gap:8px}
+.add-input{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);padding:10px 14px;border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none}
+.add-input:focus{border-color:var(--orange)}
+.add-input::placeholder{color:var(--gray)}
+.platform-sel{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--white);padding:10px 14px;border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-top:8px;cursor:pointer;appearance:none}
+.platform-sel option{background:#1a1a1a}
+.place-btn{background:var(--orange);color:#fff;border:none;padding:10px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.place-btn:hover{filter:brightness(1.1)}
+
+/* DRIVER PANEL */
+.qr-section{text-align:center;margin-bottom:20px}
+.qr-box{width:120px;height:120px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:48px}
+.qr-label{font-size:13px;color:var(--gray)}
+.qr-label strong{color:var(--white)}
+
+.driver-orders{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.driver-order{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.2s}
+.driver-order:hover{border-color:var(--orange)}
+.driver-order.selected{border-color:var(--orange);background:rgba(255,107,44,0.08)}
+.driver-order-left{font-size:13px;font-weight:600}
+.driver-order-slot{font-size:11px;color:var(--gray);margin-top:2px}
+.scan-btn{width:100%;background:var(--green);color:#fff;border:none;padding:12px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.scan-btn:hover{filter:brightness(1.1)}
+.scan-btn:disabled{background:rgba(34,197,94,0.2);color:rgba(34,197,94,0.6);cursor:not-allowed}
+
+/* LOG */
+.log{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:16px;max-height:200px;overflow-y:auto}
+.log-entry{font-size:12px;font-family:'DM Mono',monospace;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--gray)}
+.log-entry:last-child{border-bottom:none}
+.log-entry.success{color:var(--green)}
+.log-entry.warning{color:var(--amber)}
+.log-entry.info{color:var(--orange)}
+.log-entry.error{color:#f87171}
+
+.reset-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--gray);padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:16px}
+.reset-btn:hover{background:rgba(255,255,255,0.09)}
 </style>
 </head>
 <body>
-<div class="logo">Order<span>1</span></div>
-<div class="spinner"></div>
-<div class="msg">Loading OrderOne Locker...</div>
-<a href="https://goldenmikaelcheese-eng.github.io/OrderOne/OrderOne/Locker.html">If page doesn't load, click here</a>
+<div class="header">
+  <div class="logo">Order<span>1</span></div>
+  <div class="badge">Phase 2 — Locker Demo</div>
+</div>
+
+<div class="main">
+  <div class="title">OrderOne <span>Locker</span></div>
+  <p class="subtitle">Smart pickup shelf for restaurant delivery bays. Restaurant places order in a numbered slot. Driver scans QR — only their slot unlocks. Zero crowding. Zero wrong orders. Scouted at Emirates Mall delivery bays.</p>
+
+  <div class="demo-grid">
+    <!-- RESTAURANT PANEL -->
+    <div class="panel">
+      <div class="panel-title">🍔 Restaurant side</div>
+      <div class="panel-sub">Staff place completed orders into available slots</div>
+
+      <div class="add-section">
+        <div class="add-row">
+          <input class="add-input" id="order-num" placeholder="Order # (e.g. 1042)">
+          <button class="place-btn" onclick="placeOrder()">Place in slot</button>
+        </div>
+        <select class="platform-sel" id="platform-sel">
+          <option value="Talabat">Talabat</option>
+          <option value="Noon">Noon</option>
+          <option value="Careem">Careem</option>
+          <option value="Deliveroo">Deliveroo</option>
+          <option value="HungerStation">HungerStation</option>
+          <option value="InstaShop">InstaShop</option>
+        </select>
+      </div>
+
+      <div class="slots-grid" id="slots-grid"></div>
+    </div>
+
+    <!-- DRIVER PANEL -->
+    <div class="panel">
+      <div class="panel-title">🚗 Driver side</div>
+      <div class="panel-sub">Driver selects their order and scans QR to unlock slot</div>
+
+      <div class="qr-section">
+        <div class="qr-box" id="qr-display">📱</div>
+        <div class="qr-label" id="qr-label">Select your order below to get your QR code</div>
+      </div>
+
+      <div class="driver-orders" id="driver-orders">
+        <div style="color:var(--gray);font-size:13px;text-align:center;padding:16px">No orders ready for pickup yet</div>
+      </div>
+
+      <button class="scan-btn" id="scan-btn" onclick="scanQR()" disabled>Scan QR — Unlock Slot</button>
+    </div>
+  </div>
+
+  <!-- ACTIVITY LOG -->
+  <div class="panel">
+    <div class="panel-title" style="margin-bottom:12px">📋 Activity log</div>
+    <div class="log" id="activity-log">
+      <div class="log-entry info">— System ready. Place an order to begin the demo.</div>
+    </div>
+    <button class="reset-btn" onclick="resetDemo()">↺ Reset demo</button>
+  </div>
+</div>
+
 <script>
-// Load the actual file from GitHub while you upload the real file to cPanel
-setTimeout(()=>{
-  window.location.href = 'https://goldenmikaelcheese-eng.github.io/OrderOne/OrderOne/Locker.html';
-}, 1500);
+const PLATFORMS={Talabat:'#FF6600',Noon:'#FCCD00',Careem:'#00A858',HungerStation:'#E5004B',Deliveroo:'#00CD9D',InstaShop:'#5BB26C'};
+const TOTAL_SLOTS=6;
+let slots=Array(TOTAL_SLOTS).fill(null); // null=empty, {num,platform,qr}=filled, 'unlocked'=just opened
+let selectedDriverOrder=null;
+let log=[];
+
+function timestamp(){const d=new Date();return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');}
+function addLog(msg,type='info'){log.unshift({msg,type,time:timestamp()});if(log.length>20)log.pop();renderLog();}
+function renderLog(){document.getElementById('activity-log').innerHTML=log.map(l=>`<div class="log-entry ${l.type}">[${l.time}] ${l.msg}</div>`).join('');}
+
+function placeOrder(){
+  const num=document.getElementById('order-num').value.trim()||('#'+Math.floor(1000+Math.random()*8999));
+  const platform=document.getElementById('platform-sel').value;
+  const emptySlot=slots.findIndex(s=>s===null);
+  if(emptySlot===-1){addLog('All slots are full — no available slots','error');return;}
+  const qr='QR-'+num+'-'+Math.random().toString(36).substr(2,6).toUpperCase();
+  slots[emptySlot]={num,platform,qr,time:Date.now()};
+  document.getElementById('order-num').value='';
+  addLog(`Order ${num} (${platform}) placed in Slot ${emptySlot+1}`,'success');
+  addLog(`QR code generated: ${qr}`,'info');
+  render();
+}
+
+function selectDriverOrder(slotIdx){
+  if(!slots[slotIdx]||slots[slotIdx]==='unlocked')return;
+  selectedDriverOrder=slotIdx;
+  const o=slots[slotIdx];
+  document.getElementById('qr-display').textContent='📱';
+  document.getElementById('qr-display').style.background='rgba(255,107,44,0.1)';
+  document.getElementById('qr-display').style.borderColor='rgba(255,107,44,0.3)';
+  document.getElementById('qr-label').innerHTML=`QR ready for <strong>Order ${o.num}</strong><br><span style="font-size:11px;font-family:'DM Mono',monospace;color:var(--orange)">${o.qr}</span>`;
+  document.getElementById('scan-btn').disabled=false;
+  addLog(`Driver selected Order ${o.num} — QR code displayed`,'info');
+  render();
+}
+
+function scanQR(){
+  if(selectedDriverOrder===null||!slots[selectedDriverOrder])return;
+  const o=slots[selectedDriverOrder];
+  addLog(`QR scanned for Order ${o.num} — verifying...`,'info');
+  setTimeout(()=>{
+    addLog(`✓ QR verified! Slot ${selectedDriverOrder+1} unlocking...`,'success');
+    slots[selectedDriverOrder]='unlocked';
+    document.getElementById('qr-display').textContent='🔓';
+    document.getElementById('qr-display').style.background='rgba(34,197,94,0.1)';
+    document.getElementById('qr-display').style.borderColor='rgba(34,197,94,0.3)';
+    document.getElementById('qr-label').innerHTML=`<strong style="color:var(--green)">Slot ${selectedDriverOrder+1} is OPEN</strong><br>Collect your order now`;
+    document.getElementById('scan-btn').disabled=true;
+    render();
+    setTimeout(()=>{
+      addLog(`Order ${o.num} collected — Slot ${selectedDriverOrder+1} closing`,'warning');
+      slots[selectedDriverOrder]=null;
+      selectedDriverOrder=null;
+      document.getElementById('qr-display').textContent='📱';
+      document.getElementById('qr-display').style.background='rgba(255,255,255,0.04)';
+      document.getElementById('qr-display').style.borderColor='var(--border)';
+      document.getElementById('qr-label').textContent='Select your order below to get your QR code';
+      render();
+    },3000);
+  },800);
+}
+
+function resetDemo(){
+  slots=Array(TOTAL_SLOTS).fill(null);
+  selectedDriverOrder=null;
+  log=[{msg:'Demo reset. Place an order to begin.',type:'info',time:timestamp()}];
+  document.getElementById('qr-display').textContent='📱';
+  document.getElementById('qr-display').style.background='rgba(255,255,255,0.04)';
+  document.getElementById('qr-display').style.borderColor='var(--border)';
+  document.getElementById('qr-label').textContent='Select your order below to get your QR code';
+  document.getElementById('scan-btn').disabled=true;
+  render();
+}
+
+function render(){
+  // Slots grid
+  const slotsEl=document.getElementById('slots-grid');
+  slotsEl.innerHTML=slots.map((s,i)=>{
+    if(s===null){
+      return`<div class="slot empty-available" onclick=""><div class="slot-icon">📦</div><div class="slot-num">${i+1}</div><div class="slot-status">Empty</div></div>`;
+    }
+    if(s==='unlocked'){
+      return`<div class="slot unlocked"><div class="slot-icon">🔓</div><div class="slot-num">${i+1}</div><div class="slot-status">Open!</div></div>`;
+    }
+    const selected=selectedDriverOrder===i;
+    const pc=PLATFORMS[s.platform]||'#888';
+    return`<div class="slot filled ${selected?'unlocked':''}" onclick=""><div class="slot-icon">📦</div><div class="slot-num" style="color:${pc}">${i+1}</div><div class="slot-status">Order ${s.num}</div><div class="slot-platform">${s.platform}</div></div>`;
+  }).join('');
+
+  // Driver orders
+  const filledSlots=slots.map((s,i)=>({s,i})).filter(({s})=>s&&s!=='unlocked');
+  const driverEl=document.getElementById('driver-orders');
+  if(!filledSlots.length){
+    driverEl.innerHTML='<div style="color:var(--gray);font-size:13px;text-align:center;padding:16px">No orders ready for pickup yet</div>';
+  } else {
+    driverEl.innerHTML=filledSlots.map(({s,i})=>{
+      const pc=PLATFORMS[s.platform]||'#888';
+      const selected=selectedDriverOrder===i;
+      return`<div class="driver-order ${selected?'selected':''}" onclick="selectDriverOrder(${i})">
+        <div>
+          <div class="driver-order-left" style="color:${pc}">${s.platform} — Order ${s.num}</div>
+          <div class="driver-order-slot">Slot ${i+1} · Tap to select</div>
+        </div>
+        <div style="font-size:18px">${selected?'✓':'→'}</div>
+      </div>`;
+    }).join('');
+  }
+
+  renderLog();
+}
+
+render();
 </script>
 </body>
 </html>

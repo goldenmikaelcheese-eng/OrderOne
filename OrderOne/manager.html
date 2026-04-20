@@ -3,26 +3,250 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OrderOne — Loading Manager Dashboard...</title>
+<title>OrderOne — Manager Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-body{margin:0;background:#0A0A0A;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif;flex-direction:column;gap:16px}
-.logo{font-family:sans-serif;font-size:28px;font-weight:900}.logo span{color:#FF6B2C}
-.msg{color:#888;font-size:14px}
-.spinner{width:40px;height:40px;border:3px solid rgba(255,107,44,0.2);border-top-color:#FF6B2C;border-radius:50%;animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-a{color:#FF6B2C;font-size:14px;margin-top:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#FF6B2C;--black:#0A0A0A;--card:#141414;--border:rgba(255,255,255,0.08);--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--white:#F8F8F8;--gray:#888}
+body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);min-height:100vh}
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--black);z-index:50}
+.logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800}.logo span{color:var(--orange)}
+.header-right{display:flex;align-items:center;gap:10px}
+.live{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--green);font-weight:600}
+.live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.icon-btn{background:var(--card);border:1px solid var(--border);color:var(--white);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif}
+
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:12px 16px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gray);border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap}
+.tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+
+/* KPI CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
+.kpi-label{font-size:12px;color:var(--gray);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px}
+.kpi-value{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1}
+.kpi-sub{font-size:12px;color:var(--gray);margin-top:4px}
+.kpi-card.highlight{border-color:rgba(255,107,44,0.3);background:rgba(255,107,44,0.05)}
+
+/* LIVE ORDERS */
+.section{padding:16px}
+.section-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:12px;color:var(--gray);letter-spacing:0.5px;text-transform:uppercase}
+.order-row{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.order-left{display:flex;flex-direction:column;gap:4px}
+.order-platform{font-weight:700;font-size:14px}
+.order-num{font-size:12px;color:var(--gray);font-family:'DM Mono',monospace}
+.order-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.status-pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px}
+.status-pill.active{background:rgba(245,158,11,0.1);color:var(--amber)}
+.status-pill.ready{background:rgba(34,197,94,0.1);color:var(--green)}
+.order-time{font-size:11px;color:var(--gray)}
+
+/* PLATFORM BREAKDOWN */
+.platform-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.platform-row:last-child{border-bottom:none}
+.platform-name{font-weight:600;font-size:14px}
+.platform-bar-wrap{flex:1;margin:0 16px;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.platform-bar-fill{height:100%;border-radius:3px;background:var(--orange);transition:width 0.5s ease}
+.platform-count{font-size:13px;font-family:'DM Mono',monospace;color:var(--orange)}
+
+/* ALERTS */
+.alert-item{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.alert-item.critical{background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.2)}
+.alert-text{font-size:13px}
+.alert-time{font-size:11px;color:var(--gray)}
+
+body.light{background:#F0F0F0;color:#0A0A0A}
+body.light .header{background:#F0F0F0}
+body.light .kpi-card,.order-row,.alert-item{background:#fff}
 </style>
 </head>
 <body>
-<div class="logo">Order<span>1</span></div>
-<div class="spinner"></div>
-<div class="msg">Loading Manager Dashboard...</div>
-<a href="https://goldenmikaelcheese-eng.github.io/OrderOne/OrderOne/Manager%20Dashboard.html">If page doesn't load, click here</a>
+<div class="header">
+  <div class="logo">Order<span>1</span> <span style="font-size:13px;color:var(--gray);font-weight:400;margin-left:8px">Manager</span></div>
+  <div class="header-right">
+    <div class="live"><div class="live-dot"></div>LIVE</div>
+    <button class="icon-btn" onclick="toggleTheme()">🌙</button>
+    <button class="icon-btn" onclick="render()">↻ Refresh</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" id="tab-overview" onclick="switchTab('overview')">Overview</div>
+  <div class="tab" id="tab-orders" onclick="switchTab('orders')">Live Orders</div>
+  <div class="tab" id="tab-platforms" onclick="switchTab('platforms')">Platforms</div>
+  <div class="tab" id="tab-alerts" onclick="switchTab('alerts')">Alerts</div>
+</div>
+
+<!-- OVERVIEW -->
+<div id="panel-overview">
+  <div class="kpi-grid">
+    <div class="kpi-card highlight">
+      <div class="kpi-label">Revenue today</div>
+      <div class="kpi-value" id="k-revenue" style="color:var(--orange)">AED 0</div>
+      <div class="kpi-sub">From completed orders</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Orders today</div>
+      <div class="kpi-value" id="k-orders">0</div>
+      <div class="kpi-sub">Accepted and completed</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Active now</div>
+      <div class="kpi-value" id="k-active" style="color:var(--amber)">0</div>
+      <div class="kpi-sub">In kitchen or ready</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg order value</div>
+      <div class="kpi-value" id="k-avg">AED 0</div>
+      <div class="kpi-sub">Today's average</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Platform breakdown</div>
+    <div id="overview-platforms"></div>
+  </div>
+</div>
+
+<!-- LIVE ORDERS -->
+<div id="panel-orders" style="display:none">
+  <div class="section">
+    <div class="section-title">Restaurant orders</div>
+    <div id="live-restaurant"></div>
+    <div class="section-title" style="margin-top:16px">Bar orders</div>
+    <div id="live-bar"></div>
+  </div>
+</div>
+
+<!-- PLATFORMS -->
+<div id="panel-platforms" style="display:none">
+  <div class="section">
+    <div class="section-title">Orders by platform</div>
+    <div id="platform-breakdown"></div>
+  </div>
+</div>
+
+<!-- ALERTS -->
+<div id="panel-alerts" style="display:none">
+  <div class="section">
+    <div class="section-title">Active alerts</div>
+    <div id="alerts-list"></div>
+  </div>
+</div>
+
 <script>
-// Load the actual file from GitHub while you upload the real file to cPanel
-setTimeout(()=>{
-  window.location.href = 'https://goldenmikaelcheese-eng.github.io/OrderOne/OrderOne/Manager%20Dashboard.html';
-}, 1500);
+const PLATFORMS={Talabat:{color:'#FF6600'},Noon:{color:'#FCCD00'},Careem:{color:'#00A858'},HungerStation:{color:'#E5004B'},Deliveroo:{color:'#00CD9D'},InstaShop:{color:'#5BB26C'}};
+let darkMode=true;
+
+function loadState(){
+  try{return JSON.parse(localStorage.getItem('orderone_state')||'{}');}catch(e){return{};}
+}
+
+function switchTab(t){
+  ['overview','orders','platforms','alerts'].forEach(id=>{
+    document.getElementById('panel-'+id).style.display='none';
+    document.getElementById('tab-'+id).classList.remove('active');
+  });
+  document.getElementById('panel-'+t).style.display='block';
+  document.getElementById('tab-'+t).classList.add('active');
+  render();
+}
+
+function render(){
+  const state=loadState();
+  const orders=state.orders||[];
+  const active=orders.filter(o=>o.status==='active'||o.status==='ready');
+  const done=orders.filter(o=>o.status==='collected');
+  const revenue=state.totalRevenue||0;
+  const doneCount=state.doneCount||0;
+
+  // KPIs
+  document.getElementById('k-revenue').textContent='AED '+revenue;
+  document.getElementById('k-orders').textContent=doneCount;
+  document.getElementById('k-active').textContent=active.length;
+  document.getElementById('k-avg').textContent=doneCount>0?'AED '+Math.round(revenue/doneCount):'AED 0';
+
+  // Overview platforms
+  const platEl=document.getElementById('overview-platforms');
+  if(platEl){
+    const platCounts={};
+    orders.forEach(o=>{if(!platCounts[o.platform])platCounts[o.platform]=0;platCounts[o.platform]++;});
+    const max=Math.max(...Object.values(platCounts),1);
+    platEl.innerHTML=Object.entries(PLATFORMS).map(([p,info])=>{
+      const count=platCounts[p]||0;
+      return`<div class="platform-row">
+        <div class="platform-name" style="color:${info.color}">${p}</div>
+        <div class="platform-bar-wrap"><div class="platform-bar-fill" style="width:${(count/max)*100}%;background:${info.color}"></div></div>
+        <div class="platform-count">${count}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Live orders
+  const restEl=document.getElementById('live-restaurant');
+  const barEl=document.getElementById('live-bar');
+  if(restEl){
+    const restOrders=active.filter(o=>o.section!=='bar');
+    restEl.innerHTML=restOrders.length?restOrders.map(o=>orderRow(o)).join(''):'<div style="color:var(--gray);font-size:13px;padding:8px 0">No restaurant orders active</div>';
+  }
+  if(barEl){
+    const barOrders=active.filter(o=>o.section==='bar');
+    barEl.innerHTML=barOrders.length?barOrders.map(o=>orderRow(o)).join(''):'<div style="color:var(--gray);font-size:13px;padding:8px 0">No bar orders active</div>';
+  }
+
+  // Platform breakdown
+  const pbEl=document.getElementById('platform-breakdown');
+  if(pbEl){
+    const platCounts={};
+    orders.forEach(o=>{if(!platCounts[o.platform])platCounts[o.platform]=0;platCounts[o.platform]++;});
+    const max=Math.max(...Object.values(platCounts),1);
+    pbEl.innerHTML=Object.entries(PLATFORMS).map(([p,info])=>{
+      const count=platCounts[p]||0;
+      return`<div class="platform-row">
+        <div class="platform-name" style="color:${info.color}">${p}</div>
+        <div class="platform-bar-wrap"><div class="platform-bar-fill" style="width:${(count/max)*100}%;background:${info.color}"></div></div>
+        <div class="platform-count">${count} orders</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Alerts
+  const alertsEl=document.getElementById('alerts-list');
+  if(alertsEl){
+    const expired=active.filter(o=>o.readyAt&&(Date.now()-o.readyAt)/1000>600);
+    const slow=active.filter(o=>(Date.now()-o.time)/1000>600&&!o.readyAt);
+    const alerts=[
+      ...expired.map(o=>({text:`Order ${o.num} (${o.platform}) — driver has not collected for 10+ minutes`,critical:true})),
+      ...slow.map(o=>({text:`Order ${o.num} (${o.platform}) — in kitchen for 10+ minutes`,critical:false})),
+    ];
+    alertsEl.innerHTML=alerts.length
+      ?alerts.map(a=>`<div class="alert-item ${a.critical?'critical':''}"><div class="alert-text">${a.critical?'🔴':'⚠️'} ${a.text}</div></div>`).join('')
+      :'<div style="color:var(--gray);font-size:13px;padding:12px 0">✓ No active alerts — everything looks good</div>';
+  }
+}
+
+function orderRow(o){
+  const pc=PLATFORMS[o.platform]?.color||'#888';
+  const elapsed=Math.floor((Date.now()-o.time)/1000);
+  const mins=Math.floor(elapsed/60);
+  return`<div class="order-row">
+    <div class="order-left">
+      <span class="order-platform" style="color:${pc}">${o.platform}</span>
+      <span class="order-num">${o.num} · ${o.section==='bar'?'🍹 Bar':'🍔 Restaurant'}</span>
+    </div>
+    <div class="order-right">
+      <span class="status-pill ${o.status}">${o.status==='ready'?'Ready':'In kitchen'}</span>
+      <span class="order-time">${mins}m ago · AED ${o.total||0}</span>
+    </div>
+  </div>`;
+}
+
+function toggleTheme(){darkMode=!darkMode;document.body.classList.toggle('light',!darkMode);}
+
+setInterval(render,5000);
+render();
 </script>
 </body>
 </html>

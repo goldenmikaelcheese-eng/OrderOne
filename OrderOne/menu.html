@@ -3,26 +3,258 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OrderOne — Loading Menu Tablet...</title>
+<title>OrderOne — Menu Tablet</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-body{margin:0;background:#0A0A0A;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif;flex-direction:column;gap:16px}
-.logo{font-family:sans-serif;font-size:28px;font-weight:900}.logo span{color:#FF6B2C}
-.msg{color:#888;font-size:14px}
-.spinner{width:40px;height:40px;border:3px solid rgba(255,107,44,0.2);border-top-color:#FF6B2C;border-radius:50%;animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-a{color:#FF6B2C;font-size:14px;margin-top:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#FF6B2C;--black:#0A0A0A;--card:#141414;--border:rgba(255,255,255,0.08);--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--white:#F8F8F8;--gray:#888}
+body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);min-height:100vh}
+.header{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--black);z-index:50}
+.logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800}.logo span{color:var(--orange)}
+.header-right{display:flex;gap:8px;align-items:center}
+.live{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--green);font-weight:600}
+.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.icon-btn{background:var(--card);border:1px solid var(--border);color:var(--white);width:32px;height:32px;border-radius:6px;cursor:pointer;font-size:14px}
+
+/* ALERT BAR */
+.alert-bar{background:rgba(245,158,11,0.08);border-bottom:1px solid rgba(245,158,11,0.2);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.alert-text{font-size:13px;color:var(--amber);font-weight:600}
+.snooze-all-btn{background:var(--amber);border:none;color:#000;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--border)}
+.tab{flex:1;padding:12px 8px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;color:var(--gray);border-bottom:2px solid transparent;transition:all 0.2s}
+.tab.active{color:var(--orange);border-bottom-color:var(--orange)}
+
+/* PLATFORM FILTER */
+.platform-filter{display:flex;gap:6px;padding:12px 16px;overflow-x:auto;border-bottom:1px solid var(--border)}
+.platform-filter::-webkit-scrollbar{display:none}
+.pf-btn{flex-shrink:0;padding:5px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--gray);font-size:12px;cursor:pointer;transition:all 0.2s;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.pf-btn.active{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:600}
+
+/* SEARCH */
+.search-bar{padding:12px 16px;border-bottom:1px solid var(--border)}
+.search-input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--white);padding:10px 14px;border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none}
+.search-input:focus{border-color:var(--orange)}
+.search-input::placeholder{color:var(--gray)}
+
+/* CATEGORIES */
+.categories{padding:12px 16px}
+.category-section{margin-bottom:8px}
+.category-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--gray);padding:8px 0;border-bottom:1px solid var(--border);margin-bottom:8px;letter-spacing:0.5px;text-transform:uppercase}
+.items-list{display:flex;flex-direction:column;gap:8px}
+
+.menu-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;transition:border-color 0.2s}
+.menu-item.snoozed{opacity:0.5;border-color:rgba(239,68,68,0.3)}
+.menu-item.low-stock{border-color:rgba(245,158,11,0.4)}
+.item-info .item-name{font-size:14px;font-weight:600}
+.item-info .item-meta{font-size:12px;color:var(--gray);margin-top:2px}
+.item-info .item-price{font-size:13px;color:var(--orange);font-weight:600;margin-top:2px}
+.item-controls{display:flex;align-items:center;gap:10px}
+.stock-badge{font-size:11px;padding:3px 8px;border-radius:100px;font-weight:600}
+.stock-badge.ok{background:rgba(34,197,94,0.1);color:var(--green)}
+.stock-badge.low{background:rgba(245,158,11,0.1);color:var(--amber)}
+.stock-badge.out{background:rgba(239,68,68,0.1);color:var(--red)}
+.toggle{width:44px;height:24px;background:var(--green);border-radius:12px;position:relative;cursor:pointer;transition:background 0.2s;border:none;flex-shrink:0}
+.toggle.off{background:rgba(239,68,68,0.4)}
+.toggle::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform 0.2s}
+.toggle.off::after{transform:translateX(20px)}
+
+/* STOCK TAB */
+.stock-section{padding:16px}
+.stock-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.stock-controls{display:flex;align-items:center;gap:10px}
+.stock-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--white);width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:16px;font-weight:700}
+.stock-count{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;min-width:32px;text-align:center}
+
+body.light{background:#F0F0F0;color:#0A0A0A}
+body.light .header,.tabs-wrap{background:#F0F0F0}
+body.light .menu-item,.stock-item{background:#fff}
 </style>
 </head>
 <body>
-<div class="logo">Order<span>1</span></div>
-<div class="spinner"></div>
-<div class="msg">Loading Menu Tablet...</div>
-<a href="https://goldenmikaelcheese-eng.github.io/OrderOne/OrderOne/Menu%20Tablet.html">If page doesn't load, click here</a>
+<div class="header">
+  <div class="logo">Order<span>1</span> <span style="font-size:12px;color:var(--gray);font-weight:400;margin-left:6px">Menu</span></div>
+  <div class="header-right">
+    <div class="live"><div class="live-dot"></div>LIVE</div>
+    <button class="icon-btn" onclick="toggleTheme()">🌙</button>
+    <button class="icon-btn" onclick="render()">↻</button>
+  </div>
+</div>
+
+<div class="alert-bar" id="alert-bar" style="display:none">
+  <span class="alert-text" id="alert-text">⚠️ Items running low</span>
+  <button class="snooze-all-btn" onclick="snoozeAll()">Snooze all low items</button>
+</div>
+
+<div class="tabs">
+  <div class="tab active" id="tab-menu" onclick="switchTab('menu')">Menu</div>
+  <div class="tab" id="tab-stock" onclick="switchTab('stock')">Stock</div>
+  <div class="tab" id="tab-perf" onclick="switchTab('perf')">Performance</div>
+</div>
+
+<!-- MENU TAB -->
+<div id="panel-menu">
+  <div class="platform-filter">
+    <button class="pf-btn active" onclick="setPlatform('All',this)">All</button>
+    <button class="pf-btn" onclick="setPlatform('Talabat',this)">Talabat</button>
+    <button class="pf-btn" onclick="setPlatform('Noon',this)">Noon</button>
+    <button class="pf-btn" onclick="setPlatform('Careem',this)">Careem</button>
+    <button class="pf-btn" onclick="setPlatform('HungerStation',this)">Hunger</button>
+    <button class="pf-btn" onclick="setPlatform('Deliveroo',this)">Deliveroo</button>
+    <button class="pf-btn" onclick="setPlatform('InstaShop',this)">InstaShop</button>
+  </div>
+  <div class="search-bar">
+    <input class="search-input" id="search-input" placeholder="Search menu items..." oninput="render()">
+  </div>
+  <div class="categories" id="menu-categories"></div>
+</div>
+
+<!-- STOCK TAB -->
+<div id="panel-stock" style="display:none">
+  <div class="stock-section" id="stock-section"></div>
+</div>
+
+<!-- PERFORMANCE TAB -->
+<div id="panel-perf" style="display:none">
+  <div style="padding:20px">
+    <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:16px">Best sellers by platform</div>
+    <div id="perf-content"></div>
+  </div>
+</div>
+
 <script>
-// Load the actual file from GitHub while you upload the real file to cPanel
-setTimeout(()=>{
-  window.location.href = 'https://goldenmikaelcheese-eng.github.io/OrderOne/OrderOne/Menu%20Tablet.html';
-}, 1500);
+const MENU_DATA = [
+  {id:1,name:'Smash Burger',category:'Burgers',price:42,section:'restaurant',stock:8,snoozed:false},
+  {id:2,name:'Double Cheese Burger',category:'Burgers',price:52,section:'restaurant',stock:5,snoozed:false},
+  {id:3,name:'Crispy Chicken Burger',category:'Burgers',price:45,section:'restaurant',stock:6,snoozed:false},
+  {id:4,name:'Veggie Burger',category:'Burgers',price:38,section:'restaurant',stock:3,snoozed:false},
+  {id:5,name:'Loaded Fries',category:'Sides',price:28,section:'restaurant',stock:12,snoozed:false},
+  {id:6,name:'Onion Rings',category:'Sides',price:22,section:'restaurant',stock:8,snoozed:false},
+  {id:7,name:'Caesar Salad',category:'Salads',price:35,section:'restaurant',stock:4,snoozed:false},
+  {id:8,name:'Chocolate Milkshake',category:'Drinks',price:28,section:'bar',stock:10,snoozed:false},
+  {id:9,name:'Mango Juice',category:'Drinks',price:18,section:'bar',stock:15,snoozed:false},
+  {id:10,name:'Lemonade',category:'Drinks',price:16,section:'bar',stock:2,snoozed:false},
+  {id:11,name:'Iced Coffee',category:'Drinks',price:22,section:'bar',stock:7,snoozed:false},
+  {id:12,name:'Sparkling Water',category:'Drinks',price:10,section:'bar',stock:20,snoozed:false},
+];
+
+let currentPlatform='All';
+let darkMode=true;
+
+function setPlatform(p,btn){
+  currentPlatform=p;
+  document.querySelectorAll('.pf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function switchTab(t){
+  ['menu','stock','perf'].forEach(id=>{
+    document.getElementById('panel-'+id).style.display='none';
+    document.getElementById('tab-'+id).classList.remove('active');
+  });
+  document.getElementById('panel-'+t).style.display='block';
+  document.getElementById('tab-'+t).classList.add('active');
+  render();
+}
+
+function toggleItem(id){
+  const item=MENU_DATA.find(i=>i.id===id);
+  if(item) item.snoozed=!item.snoozed;
+  render();
+}
+
+function adjustStock(id,delta){
+  const item=MENU_DATA.find(i=>i.id===id);
+  if(item){item.stock=Math.max(0,item.stock+delta);if(item.stock===0)item.snoozed=true;if(item.stock>0&&item.snoozed)item.snoozed=false;}
+  render();
+}
+
+function snoozeAll(){
+  MENU_DATA.filter(i=>i.stock<=3).forEach(i=>i.snoozed=true);
+  render();
+}
+
+function getStockBadge(item){
+  if(item.stock===0)return`<span class="stock-badge out">Out</span>`;
+  if(item.stock<=3)return`<span class="stock-badge low">${item.stock} left</span>`;
+  return`<span class="stock-badge ok">${item.stock}</span>`;
+}
+
+function render(){
+  // Alert bar
+  const lowItems=MENU_DATA.filter(i=>i.stock<=3&&!i.snoozed);
+  const alertBar=document.getElementById('alert-bar');
+  if(lowItems.length){
+    alertBar.style.display='flex';
+    document.getElementById('alert-text').textContent=`⚠️ ${lowItems.length} item${lowItems.length>1?'s':''} running low: ${lowItems.map(i=>i.name).join(', ')}`;
+  } else {
+    alertBar.style.display='none';
+  }
+
+  // Menu tab
+  const search=(document.getElementById('search-input')?.value||'').toLowerCase();
+  const filtered=MENU_DATA.filter(i=>i.name.toLowerCase().includes(search));
+  const categories=[...new Set(filtered.map(i=>i.category))];
+  const menuEl=document.getElementById('menu-categories');
+  if(menuEl){
+    menuEl.innerHTML=categories.map(cat=>{
+      const items=filtered.filter(i=>i.category===cat);
+      return`<div class="category-section">
+        <div class="category-name">${cat}</div>
+        <div class="items-list">
+          ${items.map(item=>`<div class="menu-item ${item.snoozed?'snoozed':''} ${item.stock<=3&&!item.snoozed?'low-stock':''}">
+            <div class="item-info">
+              <div class="item-name">${item.name}</div>
+              <div class="item-meta">${item.section==='bar'?'🍹 Bar':'🍔 Restaurant'}</div>
+              <div class="item-price">AED ${item.price}</div>
+            </div>
+            <div class="item-controls">
+              ${getStockBadge(item)}
+              <button class="toggle ${item.snoozed?'off':''}" onclick="toggleItem(${item.id})" title="${item.snoozed?'Snoozed on all platforms':'Available on all platforms'}"></button>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Stock tab
+  const stockEl=document.getElementById('stock-section');
+  if(stockEl&&document.getElementById('panel-stock').style.display!=='none'){
+    stockEl.innerHTML=MENU_DATA.map(item=>`<div class="stock-item">
+      <div><div style="font-weight:600;font-size:14px">${item.name}</div><div style="font-size:12px;color:var(--gray);margin-top:2px">${item.category}</div></div>
+      <div class="stock-controls">
+        ${getStockBadge(item)}
+        <button class="stock-btn" onclick="adjustStock(${item.id},-1)">−</button>
+        <div class="stock-count">${item.stock}</div>
+        <button class="stock-btn" onclick="adjustStock(${item.id},1)">+</button>
+      </div>
+    </div>`).join('');
+  }
+
+  // Performance tab
+  const perfEl=document.getElementById('perf-content');
+  if(perfEl&&document.getElementById('panel-perf').style.display!=='none'){
+    const platforms=['Talabat','Noon','Careem','Deliveroo'];
+    perfEl.innerHTML=platforms.map(p=>{
+      const top=MENU_DATA.slice().sort(()=>Math.random()-0.5).slice(0,3);
+      return`<div style="margin-bottom:20px">
+        <div style="font-weight:700;font-size:14px;margin-bottom:10px;color:var(--orange)">${p}</div>
+        ${top.map((item,i)=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span>${i+1}. ${item.name}</span>
+          <span style="color:var(--orange)">${Math.floor(Math.random()*50+10)} orders</span>
+        </div>`).join('')}
+      </div>`;
+    }).join('');
+  }
+}
+
+function toggleTheme(){darkMode=!darkMode;document.body.classList.toggle('light',!darkMode);}
+render();
+setInterval(render,10000);
 </script>
 </body>
 </html>
