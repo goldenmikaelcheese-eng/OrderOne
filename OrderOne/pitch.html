@@ -3,26 +3,383 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OrderOne — Loading Investor Pitch...</title>
+<title>OrderOne — Investor Pitch 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-body{margin:0;background:#0A0A0A;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif;flex-direction:column;gap:16px}
-.logo{font-family:sans-serif;font-size:28px;font-weight:900}.logo span{color:#FF6B2C}
-.msg{color:#888;font-size:14px}
-.spinner{width:40px;height:40px;border:3px solid rgba(255,107,44,0.2);border-top-color:#FF6B2C;border-radius:50%;animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-a{color:#FF6B2C;font-size:14px;margin-top:8px}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#FF6B2C;--black:#080808;--card:#111;--border:rgba(255,255,255,0.07);--white:#F8F8F8;--gray:#666;--lgray:#999}
+html,body{height:100%;overflow:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white)}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:16px 40px;background:rgba(8,8,8,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800}.nav-logo span{color:var(--orange)}
+.nav-right{display:flex;align-items:center;gap:16px}
+.slide-counter{font-size:13px;color:var(--gray);font-family:'DM Mono',monospace}
+.nav-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--white);width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:16px;transition:background 0.2s}
+.nav-btn:hover{background:rgba(255,255,255,0.12)}
+
+/* SLIDES */
+.slides{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}
+.slides::-webkit-scrollbar{display:none}
+.slide{height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:100px 60px 60px;position:relative;max-width:1000px;margin:0 auto;text-align:center}
+.slide.left{align-items:flex-start;text-align:left}
+
+/* BG effects */
+.slide::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,107,44,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,107,44,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:-1}
+
+.slide-num{font-size:12px;color:var(--orange);font-family:'DM Mono',monospace;font-weight:600;letter-spacing:2px;margin-bottom:16px;opacity:0.8}
+.slide h1{font-family:'Syne',sans-serif;font-size:clamp(48px,6vw,80px);font-weight:800;letter-spacing:-2px;line-height:0.95;margin-bottom:24px}
+.slide h1 span{color:var(--orange)}
+.slide h2{font-family:'Syne',sans-serif;font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-1.5px;line-height:1;margin-bottom:16px}
+.slide h2 span{color:var(--orange)}
+.slide p{font-size:18px;color:var(--lgray);line-height:1.6;max-width:640px;margin-bottom:16px}
+.slide .big-stat{font-family:'Syne',sans-serif;font-size:72px;font-weight:800;color:var(--orange);line-height:1}
+.slide .big-label{font-size:16px;color:var(--lgray);margin-top:8px}
+
+/* UAE badge */
+.uae-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,107,44,0.1);border:1px solid rgba(255,107,44,0.25);color:var(--orange);padding:8px 18px;border-radius:100px;font-size:13px;font-weight:700;margin-bottom:28px}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;width:100%;margin-top:24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:left}
+.card-icon{font-size:28px;margin-bottom:12px}
+.card h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px}
+.card p{font-size:13px;color:var(--lgray);line-height:1.5}
+.card .source{font-size:11px;color:var(--orange);margin-top:10px;font-weight:600}
+
+/* Table */
+.table-wrap{width:100%;overflow-x:auto;margin-top:24px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--black);border:1px solid rgba(255,255,255,0.1);padding:12px 14px;text-align:left;color:var(--lgray);font-weight:600;letter-spacing:0.5px}
+td{border:1px solid rgba(255,255,255,0.06);padding:11px 14px}
+tr.us td{background:rgba(255,107,44,0.06)}
+tr.us td:first-child{font-weight:700;color:var(--orange)}
+.yes{color:#4ade80;font-weight:700}
+.no{color:#f87171}
+.partial{color:var(--orange)}
+
+/* Steps */
+.steps{display:flex;flex-direction:column;gap:16px;width:100%;margin-top:16px}
+.step{display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.step-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--orange);line-height:1;flex-shrink:0;width:40px}
+.step-body h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:4px}
+.step-body p{font-size:13px;color:var(--lgray);line-height:1.5}
+.step-pill{display:inline-block;background:rgba(255,107,44,0.1);border:1px solid rgba(255,107,44,0.2);color:var(--orange);padding:2px 10px;border-radius:100px;font-size:11px;font-weight:700;margin-left:8px}
+
+/* Revenue table */
+.rev-table{width:100%;border-collapse:collapse;margin-top:20px}
+.rev-table th{background:rgba(255,107,44,0.1);border:1px solid rgba(255,107,44,0.2);padding:10px 14px;font-size:13px;color:var(--orange);font-weight:700}
+.rev-table td{border:1px solid var(--border);padding:10px 14px;font-size:13px}
+.rev-table tr:last-child td{font-weight:700;color:var(--orange);background:rgba(255,107,44,0.06)}
+
+/* Budget table */
+.budget-table{width:100%;border-collapse:collapse;margin-top:16px}
+.budget-table th{background:var(--black);border:1px solid rgba(255,255,255,0.1);padding:10px 14px;font-size:12px;color:var(--lgray)}
+.budget-table td{border:1px solid var(--border);padding:10px 14px;font-size:13px}
+.budget-table tr:last-child td{background:var(--orange);color:#fff;font-weight:700}
+.budget-table td:last-child{color:var(--orange);font-weight:700;font-family:'DM Mono',monospace}
+.budget-table tr:last-child td:last-child{color:#fff}
+
+/* Timeline */
+.timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;width:100%;margin-top:24px}
+.year-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 14px;text-align:center}
+.year-card.active{border-color:var(--orange);background:rgba(255,107,44,0.06)}
+.year-label{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--orange);margin-bottom:6px}
+.year-rest{font-size:22px;font-weight:700;margin-bottom:4px}
+.year-rev{font-size:11px;color:var(--lgray)}
+
+/* Quote */
+.quote-wrap{max-width:700px;margin:0 auto;text-align:center}
+.quote{font-family:'Syne',sans-serif;font-size:clamp(20px,3vw,32px);font-weight:700;line-height:1.3;margin-bottom:20px}
+.quote span{color:var(--orange)}
+.quote-attr{font-size:14px;color:var(--gray)}
+
+/* Action table */
+.action-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px}
+.action-table th{background:var(--black);border:1px solid rgba(255,255,255,0.1);padding:10px 14px;color:var(--lgray);font-weight:600;text-align:left}
+.action-table td{border:1px solid var(--border);padding:10px 14px}
+.pill-critical{background:rgba(239,68,68,0.1);color:#f87171;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:700}
+.pill-high{background:rgba(255,107,44,0.1);color:var(--orange);padding:2px 8px;border-radius:100px;font-size:11px;font-weight:700}
+.pill-medium{background:rgba(255,255,255,0.06);color:var(--lgray);padding:2px 8px;border-radius:100px;font-size:11px;font-weight:700}
+
+/* Stat row */
+.stat-row{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.stat-item{text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;color:var(--orange)}
+.stat-lbl{font-size:13px;color:var(--lgray);margin-top:4px}
+
+/* Footer */
+.slide-footer{position:absolute;bottom:24px;left:0;right:0;text-align:center;font-size:12px;color:var(--gray);font-family:'DM Mono',monospace}
 </style>
 </head>
 <body>
-<div class="logo">Order<span>1</span></div>
-<div class="spinner"></div>
-<div class="msg">Loading Investor Pitch...</div>
-<a href="https://goldenmikaelcheese-eng.github.io/OrderOne/OrderOne/Pitch.html">If page doesn't load, click here</a>
+
+<div class="nav">
+  <div class="nav-logo">Order<span>1</span></div>
+  <div class="nav-right">
+    <span class="slide-counter" id="counter">1 / 13</span>
+    <button class="nav-btn" onclick="prevSlide()">↑</button>
+    <button class="nav-btn" onclick="nextSlide()">↓</button>
+  </div>
+</div>
+
+<div class="slides" id="slides">
+
+<!-- 01 COVER -->
+<div class="slide" id="s1">
+  <div class="uae-badge">🇦🇪 Built in UAE · For UAE · orderone.ae</div>
+  <div class="slide-num">01 — OrderOne</div>
+  <h1>One device.<br><span>Every platform.</span></h1>
+  <p>Replacing 6 separate delivery tablets with one screen — and showing drivers their order number outside so they never crowd the store again.</p>
+  <div class="stat-row">
+    <div class="stat-item"><div class="stat-num">26,795</div><div class="stat-lbl">Restaurants in UAE</div></div>
+    <div class="stat-item"><div class="stat-num">6+</div><div class="stat-lbl">Devices per counter</div></div>
+    <div class="stat-item"><div class="stat-num">AED 0</div><div class="stat-lbl">Cost to restaurants</div></div>
+    <div class="stat-item"><div class="stat-num">10 min</div><div class="stat-lbl">Setup time</div></div>
+  </div>
+  <div class="slide-footer">orderone.ae · partnerships@orderone.ae · Dubai, UAE · 2026</div>
+</div>
+
+<!-- 02 PROBLEM -->
+<div class="slide left" id="s2">
+  <div class="slide-num">02 — The Problem</div>
+  <h2>We walked into stores<br>and saw <span>the chaos.</span></h2>
+  <div class="cards">
+    <div class="card"><div class="card-icon">📱</div><h3>6–7 devices per counter</h3><p>Talabat, Noon, Careem, Deliveroo — each gives restaurants their own branded device. Staff juggle all of them simultaneously.</p></div>
+    <div class="card"><div class="card-icon">🚗</div><h3>Drivers crowd inside</h3><p>Drivers walk in asking "is my order ready?" — chaos during busy hours. Confirmed at Pinkberry, Dubai Hills Mall.</p><div class="source">Source: Pinkberry — Dubai Hills Mall</div></div>
+    <div class="card"><div class="card-icon">📦</div><h3>Hidden item variants</h3><p>Deliveroo gave one restaurant TWO devices because their app can't show "cake slice" vs "whole cake" on one screen. Software problem solved with hardware.</p><div class="source">Source: Dubai Mall restaurant visit</div></div>
+    <div class="card"><div class="card-icon">📡</div><h3>WiFi dependency</h3><p>Deliveroo's device has no SIM card. When mall WiFi drops — zero orders. Pinkberry confirmed orders were lost this way.</p><div class="source">Source: Pinkberry — Dubai Hills Mall</div></div>
+    <div class="card"><div class="card-icon">💸</div><h3>Missing platform revenue</h3><p>Most restaurants are on only 1–2 platforms because every new one adds another device. They're losing thousands in monthly orders.</p></div>
+    <div class="card"><div class="card-icon">⏱️</div><h3>Food goes cold</h3><p>A driver with two orders waits for the slow one — the fast order sits getting cold. Five Guys Dubai confirmed this happens daily.</p><div class="source">Source: Five Guys — Dubai</div></div>
+  </div>
+  <div class="slide-footer">orderone.ae · partnerships@orderone.ae</div>
+</div>
+
+<!-- 03 SOLUTION -->
+<div class="slide" id="s3">
+  <div class="slide-num">03 — The Solution</div>
+  <h2>One device.<br><span>All 6 platforms.</span> Zero chaos.</h2>
+  <p>OrderOne replaces every delivery tablet with one screen. Staff accept orders from all platforms in one place. One beep per platform. One receipt per order. One device forever.</p>
+  <div class="cards">
+    <div class="card"><div class="card-icon">📟</div><h3>POS Terminal</h3><p>Sunmi V2s on the counter. All 6 platforms. Unique beep per platform. Bar vs restaurant split.</p></div>
+    <div class="card"><div class="card-icon">👨‍🍳</div><h3>Kitchen Display</h3><p>Chef sees every active order clearly. Timers go red when urgent. Marks items done one by one.</p></div>
+    <div class="card"><div class="card-icon">📺</div><h3>Pickup Screen</h3><p>LG 43" commercial screen outside. Drivers see their order number without entering the store.</p></div>
+    <div class="card"><div class="card-icon">🍽️</div><h3>Menu Tablet</h3><p>Snooze any item across all platforms instantly. Low stock alerts automatic.</p></div>
+    <div class="card"><div class="card-icon">📊</div><h3>Manager Dashboard</h3><p>Owner monitors everything from their phone. Live revenue, alerts, platform breakdown.</p></div>
+    <div class="card"><div class="card-icon">🔐</div><h3>OrderOne Locker</h3><p>Phase 2 — Smart shelf at mall delivery bays. Driver scans QR, only their slot unlocks. Scouted at Emirates Mall.</p></div>
+  </div>
+  <div class="slide-footer">orderone.ae · partnerships@orderone.ae</div>
+</div>
+
+<!-- 04 COMMISSION MULTIPLIER -->
+<div class="slide" id="s4">
+  <div class="slide-num">04 — Why Platforms Pay</div>
+  <h2>The commission<br><span>multiplier.</span></h2>
+  <p>A restaurant on 1 platform earns Talabat AED 5,000/month. On 6 platforms through OrderOne — AED 30,000/month total. OrderOne costs AED 100/month. The easiest yes they will ever say.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Situation</th><th>Talabat earns</th><th>Noon earns</th><th>Careem earns</th><th>Total all platforms</th><th>OrderOne cost</th></tr></thead>
+      <tbody>
+        <tr><td>Restaurant on 1 platform today</td><td class="yes">AED 5,000</td><td class="no">AED 0</td><td class="no">AED 0</td><td>AED 5,000/mo</td><td>AED 0</td></tr>
+        <tr class="us"><td>Restaurant on 6 via OrderOne</td><td class="yes">AED 5,000</td><td class="yes">AED 5,000</td><td class="yes">AED 5,000</td><td style="color:#4ade80;font-weight:700">AED 30,000/mo</td><td style="color:var(--orange)">AED 100/mo</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:20px;font-size:15px"><strong style="color:var(--orange)">Net gain per restaurant: AED 29,400/month.</strong> OrderOne replaces hardware that costs them more. Stops missed orders that cost them commission. Unlocks restaurants refusing new devices. Speeds up pickups. And puts their logo on a screen every driver and customer walks past.</p>
+  <div class="slide-footer">orderone.ae · partnerships@orderone.ae</div>
+</div>
+
+<!-- 05 HOW WE WIN -->
+<div class="slide left" id="s5">
+  <div class="slide-num">05 — The Strategy</div>
+  <h2>We collect restaurants.<br><span>Platforms follow.</span></h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Get API access — free <span class="step-pill">In progress</span></h3><p>Visit Talabat HQ in person at City Walk with Sunmi V2s demo. Every platform wants more restaurants. API access costs them nothing.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Give restaurants a free device</h3><p>Restaurant on 1 platform missing 5 others. Free OrderOne device, all 6 platforms instantly. We register them on every platform. They pay nothing forever.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Collect 100 restaurants — charge nothing <span class="step-pill">Goal</span></h3><p>First 100 restaurants free. Proof of concept. Real orders, real data, real results. Pilot already confirmed at Rascals Dubai.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Start charging — platforms have no choice</h3><p>"Pay AED 100/month per restaurant or miss all of them." They've seen the results. They pay. Revenue starts. Model proven.</p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><h3>Scale — platforms compete to pay us more</h3><p>500 restaurants. 2,000. 10,000. At scale we are the infrastructure. Pricing rises from AED 100 to AED 300. Nobody can leave.</p></div></div>
+  </div>
+  <div class="slide-footer">orderone.ae · partnerships@orderone.ae</div>
+</div>
+
+<!-- 06 COMPETITION -->
+<div class="slide left" id="s6">
+  <div class="slide-num">06 — Competition</div>
+  <h2>We win on<br><span>home ground.</span></h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Company</th><th>Talabat/Noon</th><th>Outside screen</th><th>Free for restaurants</th><th>Setup time</th><th>Item variants</th><th>Patents</th></tr></thead>
+      <tbody>
+        <tr class="us"><td>OrderOne (us)</td><td class="yes">✓ All 6 UAE</td><td class="yes">✓ Yes</td><td class="yes">✓ Free forever</td><td class="yes">10 minutes</td><td class="yes">✓ Full detail</td><td class="yes">✓ 12 filed</td></tr>
+        <tr><td>Grubtech (Dubai)</td><td class="no">✗ No</td><td class="no">✗ No</td><td class="no">✗ Charges monthly</td><td class="no">Weeks + IT team</td><td class="no">✗ No</td><td class="no">✗ Zero</td></tr>
+        <tr><td>Deliverect (Global)</td><td class="no">✗ No</td><td class="no">✗ No</td><td class="no">✗ $75–180/month</td><td class="no">Months</td><td class="no">✗ No</td><td class="no">✗ No UAE</td></tr>
+        <tr><td>Platform's own device</td><td class="partial">One only</td><td class="no">✗ No</td><td class="yes">✓ Free</td><td class="partial">N/A</td><td class="no">✗ Limited</td><td class="no">✗ No</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:20px;font-size:14px;color:var(--lgray)">Grubtech proves the market exists — they raised $2M but charge restaurants, need a 24/7 IT team, and only target big chains. Deliverect charges restaurants $75–180/month with no UAE platform support. <strong style="color:var(--white)">Neither has an outside pickup screen. Neither has item variant display. Neither has a single patent.</strong></p>
+  <div class="slide-footer">orderone.ae · partnerships@orderone.ae</div>
+</div>
+
+<!-- 07 MARKET -->
+<div class="slide" id="s7">
+  <div class="slide-num">07 — Market</div>
+  <h2>$18 billion market.<br><span>Nobody solved it</span> for the Middle East.</h2>
+  <div class="stat-row">
+    <div class="stat-item"><div class="stat-num">26,795</div><div class="stat-lbl">Restaurants in UAE</div></div>
+    <div class="stat-item"><div class="stat-num">$18B</div><div class="stat-lbl">UAE food service market</div></div>
+    <div class="stat-item"><div class="stat-num">52%</div><div class="stat-lbl">UAE residents order weekly</div></div>
+    <div class="stat-item"><div class="stat-num">3x</div><div class="stat-lbl">Saudi Arabia is bigger</div></div>
+  </div>
+  <p style="margin-top:24px">Deliverect is worth $600M+ solving this in Europe. We are solving it in the Middle East — the region Deliverect, Grubtech and Otter all ignore — with UAE platforms native, free for restaurants, and hardware included from day one.</p>
+  <div class="slide-footer">orderone.ae · partnerships@orderone.ae</div>
+</div>
+
+<!-- 08 BUSINESS MODEL -->
+<div class="slide left" id="s8">
+  <div class="slide-num">08 — Business Model</div>
+  <h2>Platforms pay.<br>Restaurants get it <span>free.</span></h2>
+  <div class="table-wrap">
+    <table class="rev-table">
+      <thead><tr><th>Stage</th><th>Restaurants</th><th>Price</th><th>Monthly revenue</th></tr></thead>
+      <tbody>
+        <tr><td>Launch — prove it</td><td>0–100</td><td style="color:#4ade80">FREE</td><td>AED 0 (building proof)</td></tr>
+        <tr><td>Early growth</td><td>100–500</td><td>AED 100/mo</td><td>AED 150,000/mo</td></tr>
+        <tr><td>Momentum</td><td>500–2,000</td><td>AED 150/mo</td><td>AED 1,200,000/mo</td></tr>
+        <tr><td>Scale</td><td>2,000–10,000</td><td>AED 200/mo + data</td><td>AED 8,000,000/mo</td></tr>
+        <tr><td>Dominance</td><td>10,000+</td><td>AED 300/mo + exclusivity</td><td>AED 25,000,000/mo+</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:16px;font-size:14px">Three revenue streams: platform subscriptions · platform branding fees · Pro analytics data (Year 2+). SIM cards pre-installed in every device — AED 30/month per restaurant, always connected, never misses an order due to WiFi drops.</p>
+  <div class="slide-footer">orderone.ae · partnerships@orderone.ae</div>
+</div>
+
+<!-- 09 HARDWARE -->
+<div class="slide" id="s9">
+  <div class="slide-num">09 — Hardware</div>
+  <h2>100% <span>UAE.</span><br>Sourced and built here.</h2>
+  <div class="cards">
+    <div class="card"><div class="card-icon">📟</div><h3>Sunmi V2s</h3><p>Smart POS terminal. AED 700–800. Purchased and tested. Barcode scanner, receipt printer, SIM slot built in. Sunmi MEA HQ is in Jumeirah Lake Towers, Dubai.</p></div>
+    <div class="card"><div class="card-icon">📺</div><h3>LG 43UH5Q-E</h3><p>43" commercial screen. 500 nits, webOS "Play via URL" — type URL once, plays forever. IP5X dust protection. 24/7 rated. AED 1,500–2,000. Available from LG UAE Business.</p></div>
+    <div class="card"><div class="card-icon">📡</div><h3>Pre-installed SIM</h3><p>AED 30/month per restaurant. Du or Etisalat data SIM. Always connected even when mall WiFi drops. No more missed orders from connectivity issues.</p></div>
+    <div class="card"><div class="card-icon">🔧</div><h3>Installation</h3><p>AED 200 per restaurant. Mount screen inside near glass — protected, air conditioned, visible from outside. Plug in, connect WiFi, type URL. Done in 10 minutes.</p></div>
+  </div>
+  <div class="slide-footer">orderone.ae · partnerships@orderone.ae</div>
+</div>
+
+<!-- 10 FINANCIALS -->
+<div class="slide left" id="s10">
+  <div class="slide-num">10 — Financials</div>
+  <h2>AED 810,000 to build<br>a <span>AED 810M/year</span> business.</h2>
+  <div class="table-wrap">
+    <table class="budget-table">
+      <thead><tr><th>Category</th><th>Purpose</th><th>Amount</th></tr></thead>
+      <tbody>
+        <tr><td>Hardware — 100 restaurants</td><td>Sunmi V2s + LG screen + installation × 100</td><td>AED 300,000</td></tr>
+        <tr><td>Legal and company setup</td><td>In5 Tech license + patent + contracts</td><td>AED 30,000</td></tr>
+        <tr><td>Technology</td><td>Cloud backend + QR system + login</td><td>AED 62,000</td></tr>
+        <tr><td>Sales commission</td><td>AED 500 × 100 restaurants — commission only</td><td>AED 50,000</td></tr>
+        <tr><td>SIM cards</td><td>AED 30/month × 150 restaurants (pre-installed)</td><td>AED 54,000/yr</td></tr>
+        <tr><td>Marketing</td><td>Brochures + uniforms + transport</td><td>AED 15,000</td></tr>
+        <tr><td>Emergency reserve</td><td>Broken devices + cancellations + insurance</td><td>AED 85,000</td></tr>
+        <tr><td>Scaling buffer</td><td>Hardware + sales for next 50 restaurants</td><td>AED 175,000</td></tr>
+        <tr><td><strong>TOTAL</strong></td><td><strong>For 15–20% equity in OrderOne</strong></td><td><strong>AED 810,000</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:16px;font-size:13px;color:var(--lgray)">Hardware cost recovered per restaurant in under 3 months once platforms pay. Break even on full investment at month 18. Profitable at scale by end of Year 2.</p>
+  <div class="slide-footer">orderone.ae · partnerships@orderone.ae</div>
+</div>
+
+<!-- 11 5-YEAR PLAN -->
+<div class="slide" id="s11">
+  <div class="slide-num">11 — 5-Year Plan</div>
+  <h2>From Dubai to<br><span>every platform</span> in MENA.</h2>
+  <div class="timeline">
+    <div class="year-card active"><div class="year-label">2026</div><div class="year-rest">500</div><div class="year-rev">restaurants</div><div class="year-rev" style="margin-top:4px;color:var(--orange)">AED 1.8M/yr</div></div>
+    <div class="year-card"><div class="year-label">2027</div><div class="year-rest">2,000</div><div class="year-rev">UAE + Saudi</div><div class="year-rev" style="margin-top:4px;color:var(--orange)">AED 14.4M/yr</div></div>
+    <div class="year-card"><div class="year-label">2028</div><div class="year-rest">8,000</div><div class="year-rev">Full GCC</div><div class="year-rev" style="margin-top:4px;color:var(--orange)">AED 96M/yr</div></div>
+    <div class="year-card"><div class="year-label">2029</div><div class="year-rest">25,000</div><div class="year-rev">MENA + Gov deal</div><div class="year-rev" style="margin-top:4px;color:var(--orange)">AED 300M/yr</div></div>
+    <div class="year-card"><div class="year-label">2030</div><div class="year-rest">75,000</div><div class="year-rev">IPO / exit</div><div class="year-rev" style="margin-top:4px;color:var(--orange)">AED 810M/yr</div></div>
+  </div>
+  <p style="margin-top:24px">First 100 restaurants free. Revenue starts month 6. Break even month 18. Saudi Arabia in Year 2 — same problem, 3× the market. Government deal in Year 4 — every new restaurant license includes OrderOne automatically.</p>
+  <div class="slide-footer">orderone.ae · partnerships@orderone.ae</div>
+</div>
+
+<!-- 12 NEXT STEPS -->
+<div class="slide left" id="s12">
+  <div class="slide-num">12 — Next Steps</div>
+  <h2>Four steps to<br><span>make it real.</span></h2>
+  <table class="action-table">
+    <thead><tr><th>When</th><th>Action</th><th>Owner</th><th>Priority</th></tr></thead>
+    <tbody>
+      <tr><td>This week</td><td>File provisional patent — all 12 features as one system</td><td>Dad</td><td><span class="pill-critical">CRITICAL</span></td></tr>
+      <tr><td>This week</td><td>Visit Talabat HQ — City Walk — Sunmi V2s in hand</td><td>Both</td><td><span class="pill-critical">CRITICAL</span></td></tr>
+      <tr><td>Week 2</td><td>Contact Deliveroo, Careem, Noon</td><td>Dad</td><td><span class="pill-high">HIGH</span></td></tr>
+      <tr><td>Week 3</td><td>Get 3+ platform APIs confirmed</td><td>Both</td><td><span class="pill-critical">CRITICAL</span></td></tr>
+      <tr><td>Week 4–8</td><td>Run live pilot at Rascals Dubai — real data</td><td>Both</td><td><span class="pill-critical">CRITICAL</span></td></tr>
+      <tr><td>Week 8–12</td><td>Investor meeting with pilot results + patent filed</td><td>Both</td><td><span class="pill-critical">CRITICAL</span></td></tr>
+      <tr><td>After investment</td><td>Scale to 100 restaurants across Dubai</td><td>Team</td><td><span class="pill-high">HIGH</span></td></tr>
+      <tr><td>Year 2</td><td>Saudi Arabia — same product, 3× bigger market</td><td>Team</td><td><span class="pill-medium">MEDIUM</span></td></tr>
+    </tbody>
+  </table>
+  <div class="slide-footer">orderone.ae · partnerships@orderone.ae</div>
+</div>
+
+<!-- 13 CLOSING -->
+<div class="slide" id="s13">
+  <div class="quote-wrap">
+    <div class="slide-num">13 — The Vision</div>
+    <div class="quote">"Built by a founder who walked into a store in Dubai, saw <span>7 devices doing one job</span>, and asked why."</div>
+    <p style="font-size:16px;color:var(--lgray);margin-bottom:32px">OrderOne is not a POS system. It is not a delivery aggregator. It is the operating system of food delivery in the Middle East. Every order. Every restaurant. Every platform. All running through one product.</p>
+    <div class="stat-row">
+      <div class="stat-item"><div class="stat-num" style="font-size:28px">Year 1</div><div class="stat-lbl">500 restaurants · UAE · AED 1.8M/yr</div></div>
+      <div class="stat-item"><div class="stat-num" style="font-size:28px">Year 3</div><div class="stat-lbl">8,000 restaurants · GCC · AED 96M/yr</div></div>
+      <div class="stat-item"><div class="stat-num" style="font-size:28px">Year 5</div><div class="stat-lbl">75,000 restaurants · MENA · AED 810M/yr</div></div>
+    </div>
+    <p style="margin-top:32px;font-size:15px;color:var(--lgray)">Raising <strong style="color:var(--white)">AED 810,000 for 15–20% equity.</strong> Live product at orderone.ae. Pilot restaurant confirmed. Patent being filed.</p>
+    <p style="margin-top:16px;font-size:14px;color:var(--orange)">partnerships@orderone.ae · orderone.ae · Dubai, UAE · 2026</p>
+  </div>
+</div>
+
+</div><!-- end slides -->
+
 <script>
-// Load the actual file from GitHub while you upload the real file to cPanel
-setTimeout(()=>{
-  window.location.href = 'https://goldenmikaelcheese-eng.github.io/OrderOne/OrderOne/Pitch.html';
-}, 1500);
+let current=1;
+const total=13;
+
+function updateCounter(){document.getElementById('counter').textContent=current+' / '+total;}
+
+function goTo(n){
+  if(n<1||n>total)return;
+  current=n;
+  const slide=document.getElementById('s'+n);
+  if(slide)slide.scrollIntoView({behavior:'smooth'});
+  updateCounter();
+}
+
+function nextSlide(){goTo(current+1);}
+function prevSlide(){goTo(current-1);}
+
+// Keyboard navigation
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowDown'||e.key==='ArrowRight'||e.key===' ')nextSlide();
+  if(e.key==='ArrowUp'||e.key==='ArrowLeft')prevSlide();
+});
+
+// Track current slide on scroll
+const slidesEl=document.getElementById('slides');
+slidesEl.addEventListener('scroll',()=>{
+  const scrollPos=slidesEl.scrollTop;
+  const slideHeight=window.innerHeight;
+  current=Math.round(scrollPos/slideHeight)+1;
+  if(current<1)current=1;
+  if(current>total)current=total;
+  updateCounter();
+},{passive:true});
 </script>
 </body>
 </html>
