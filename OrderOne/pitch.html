@@ -8,7 +8,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--orange:#FF6B2C;--black:#080808;--card:#111;--border:rgba(255,255,255,0.07);--white:#F8F8F8;--gray:#666;--lgray:#999}
-html,body{height:100%;overflow:hidden}
+html,body{height:100%}
 body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white)}
 
 /* NAV */
@@ -20,20 +20,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white)
 .nav-btn:hover{background:rgba(255,255,255,0.12)}
 
 /* SLIDES */
-.slides{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none}
+.slides{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;scroll-snap-stop:always}
 .slides::-webkit-scrollbar{display:none}
-.slide{height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:100px 60px 60px;position:relative;max-width:1000px;margin:0 auto;text-align:center}
-.slide.left{align-items:flex-start;text-align:left}
+.slide{min-height:100vh;height:auto;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:100px 60px 60px;position:relative;max-width:1000px;margin:0 auto;text-align:center}
+.slide.left{align-items:flex-start;text-align:left;justify-content:flex-start;padding-top:100px}
 
 /* BG effects */
 .slide::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,107,44,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,107,44,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:-1}
 
 .slide-num{font-size:12px;color:var(--orange);font-family:'DM Mono',monospace;font-weight:600;letter-spacing:2px;margin-bottom:16px;opacity:0.8}
-.slide h1{font-family:'Syne',sans-serif;font-size:clamp(48px,6vw,80px);font-weight:800;letter-spacing:-2px;line-height:0.95;margin-bottom:24px}
+.slide h1{font-family:'Syne',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:800;letter-spacing:-2px;line-height:0.95;margin-bottom:16px}
 .slide h1 span{color:var(--orange)}
-.slide h2{font-family:'Syne',sans-serif;font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-1.5px;line-height:1;margin-bottom:16px}
+.slide h2{font-family:'Syne',sans-serif;font-size:clamp(24px,3vw,42px);font-weight:800;letter-spacing:-1.5px;line-height:1;margin-bottom:12px}
 .slide h2 span{color:var(--orange)}
-.slide p{font-size:18px;color:var(--lgray);line-height:1.6;max-width:640px;margin-bottom:16px}
+.slide p{font-size:15px;color:var(--lgray);line-height:1.5;max-width:640px;margin-bottom:12px}
 .slide .big-stat{font-family:'Syne',sans-serif;font-size:72px;font-weight:800;color:var(--orange);line-height:1}
 .slide .big-label{font-size:16px;color:var(--lgray);margin-top:8px}
 
@@ -41,8 +41,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white)
 .uae-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,107,44,0.1);border:1px solid rgba(255,107,44,0.25);color:var(--orange);padding:8px 18px;border-radius:100px;font-size:13px;font-weight:700;margin-bottom:28px}
 
 /* Cards */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;width:100%;margin-top:24px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:left}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;width:100%;margin-top:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:left}
 .card-icon{font-size:28px;margin-bottom:12px}
 .card h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px}
 .card p{font-size:13px;color:var(--lgray);line-height:1.5}
@@ -60,8 +60,8 @@ tr.us td:first-child{font-weight:700;color:var(--orange)}
 .partial{color:var(--orange)}
 
 /* Steps */
-.steps{display:flex;flex-direction:column;gap:16px;width:100%;margin-top:16px}
-.step{display:flex;gap:16px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.steps{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:12px}
+.step{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
 .step-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--orange);line-height:1;flex-shrink:0;width:40px}
 .step-body h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:4px}
 .step-body p{font-size:13px;color:var(--lgray);line-height:1.5}
@@ -273,20 +273,20 @@ tr.us td:first-child{font-weight:700;color:var(--orange)}
 <!-- 10 FINANCIALS -->
 <div class="slide left" id="s10">
   <div class="slide-num">10 — Financials</div>
-  <h2>AED 810,000 to build<br>a <span>AED 810M/year</span> business.</h2>
+  <h2>AED 606,000 to build<br>a <span>AED 810M/year</span> business.</h2>
   <div class="table-wrap">
     <table class="budget-table">
       <thead><tr><th>Category</th><th>Purpose</th><th>Amount</th></tr></thead>
       <tbody>
-        <tr><td>Hardware — 100 restaurants</td><td>Sunmi V2s + LG screen + installation × 100</td><td>AED 300,000</td></tr>
+        <tr><td>Hardware — 100 restaurants		Sunmi V2s + LG 43UR640S + installation × 100		AED 220,000</td></tr>
         <tr><td>Legal and company setup</td><td>In5 Tech license + patent + contracts</td><td>AED 30,000</td></tr>
         <tr><td>Technology</td><td>Cloud backend + QR system + login</td><td>AED 62,000</td></tr>
         <tr><td>Sales commission</td><td>AED 500 × 100 restaurants — commission only</td><td>AED 50,000</td></tr>
         <tr><td>SIM cards</td><td>AED 30/month × 150 restaurants (pre-installed)</td><td>AED 54,000/yr</td></tr>
         <tr><td>Marketing</td><td>Brochures + uniforms + transport</td><td>AED 15,000</td></tr>
-        <tr><td>Emergency reserve</td><td>Broken devices + cancellations + insurance</td><td>AED 85,000</td></tr>
-        <tr><td>Scaling buffer</td><td>Hardware + sales for next 50 restaurants</td><td>AED 175,000</td></tr>
-        <tr><td><strong>TOTAL</strong></td><td><strong>For 15–20% equity in OrderOne</strong></td><td><strong>AED 810,000</strong></td></tr>
+        <tr><td>Emergency reserve (10% of ask)</td><td>Broken devices + cancellations + insurance</td><td>AED 55,000</td></tr>
+        <tr><td>Scaling buffer</td><td>Hardware for next 50 restaurants</td><td>AED 110,000</td></tr>
+        <tr><td><strong>TOTAL</strong></td><td><strong>For 15–20% equity in OrderOne</strong></td><td><strong>AED 606,000</strong></td></tr>
       </tbody>
     </table>
   </div>
@@ -297,7 +297,7 @@ tr.us td:first-child{font-weight:700;color:var(--orange)}
 <!-- 11 ROI -->
 <div class="slide left" id="s11">
   <div class="slide-num">11 — Return on Investment</div>
-  <h2>AED 810,000 in.<br><span>AED 607,000,000</span> back.</h2>
+  <h2>AED 606,000 in.<br><span>AED 607,000,000</span> back.</h2>
   <div class="table-wrap">
     <table class="rev-table">
       <thead><tr><th>Year</th><th>Annual revenue</th><th>Company value (5×)</th><th>15% equity worth</th><th>ROI on AED 810K</th></tr></thead>
@@ -310,7 +310,7 @@ tr.us td:first-child{font-weight:700;color:var(--orange)}
       </tbody>
     </table>
   </div>
-  <p style="margin-top:20px;font-size:15px">Break even on full investment: <strong style="color:var(--orange)">Month 18.</strong> Phase 2 Saudi Arabia is self-funded from UAE revenue — no second raise needed. The investor's AED 810,000 is the only money ever asked for.</p>
+  <p style="margin-top:20px;font-size:15px">Break even on full investment: <strong style="color:var(--orange)">Month 18.</strong> Phase 2 Saudi Arabia is self-funded from UAE revenue — no second raise needed. The investor's AED 606,000 is the only money ever asked for.</p>
   <div class="slide-footer">orderone.ae · partnerships@orderone.ae</div>
 </div>
 
@@ -360,7 +360,7 @@ tr.us td:first-child{font-weight:700;color:var(--orange)}
       <div class="stat-item"><div class="stat-num" style="font-size:28px">Year 3</div><div class="stat-lbl">8,000 restaurants · GCC · AED 96M/yr</div></div>
       <div class="stat-item"><div class="stat-num" style="font-size:28px">Year 5</div><div class="stat-lbl">75,000 restaurants · MENA · AED 810M/yr</div></div>
     </div>
-    <p style="margin-top:32px;font-size:15px;color:var(--lgray)">Raising <strong style="color:var(--white)">AED 810,000 for 15–20% equity.</strong> Live product at orderone.ae. Pilot restaurant confirmed. Patent being filed.</p>
+    <p style="margin-top:32px;font-size:15px;color:var(--lgray)">Raising <strong style="color:var(--white)">AED 606,000 for 15–20% equity.</strong> Live product at orderone.ae. Pilot restaurant confirmed. Patent being filed.</p>
     <p style="margin-top:16px;font-size:14px;color:var(--orange)">partnerships@orderone.ae · orderone.ae · Dubai, UAE · 2026</p>
   </div>
 </div>
