@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OrderOne — Manager Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--orange:#FF6B2C;--black:#0A0A0A;--card:#141414;--border:rgba(255,255,255,0.08);--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--white:#F8F8F8;--gray:#888}
@@ -16,22 +17,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white)
 .live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 .icon-btn{background:var(--card);border:1px solid var(--border);color:var(--white);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif}
-
-/* TABS */
+.sync-indicator{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:600}
+.sync-ok{background:rgba(34,197,94,0.15);color:var(--green)}
+.sync-err{background:rgba(239,68,68,0.15);color:var(--red)}
 .tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex-shrink:0;padding:12px 16px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gray);border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap}
 .tab.active{color:var(--orange);border-bottom-color:var(--orange)}
-
-/* KPI CARDS */
 .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px}
 .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
 .kpi-label{font-size:12px;color:var(--gray);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px}
 .kpi-value{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1}
 .kpi-sub{font-size:12px;color:var(--gray);margin-top:4px}
 .kpi-card.highlight{border-color:rgba(255,107,44,0.3);background:rgba(255,107,44,0.05)}
-
-/* LIVE ORDERS */
 .section{padding:16px}
 .section-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:12px;color:var(--gray);letter-spacing:0.5px;text-transform:uppercase}
 .order-row{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
@@ -43,21 +41,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white)
 .status-pill.active{background:rgba(245,158,11,0.1);color:var(--amber)}
 .status-pill.ready{background:rgba(34,197,94,0.1);color:var(--green)}
 .order-time{font-size:11px;color:var(--gray)}
-
-/* PLATFORM BREAKDOWN */
 .platform-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
 .platform-row:last-child{border-bottom:none}
 .platform-name{font-weight:600;font-size:14px}
 .platform-bar-wrap{flex:1;margin:0 16px;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
-.platform-bar-fill{height:100%;border-radius:3px;background:var(--orange);transition:width 0.5s ease}
+.platform-bar-fill{height:100%;border-radius:3px;transition:width 0.5s ease}
 .platform-count{font-size:13px;font-family:'DM Mono',monospace;color:var(--orange)}
-
-/* ALERTS */
 .alert-item{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
 .alert-item.critical{background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.2)}
 .alert-text{font-size:13px}
-.alert-time{font-size:11px;color:var(--gray)}
-
 body.light{background:#F0F0F0;color:#0A0A0A}
 body.light .header{background:#F0F0F0}
 body.light .kpi-card,.order-row,.alert-item{background:#fff}
@@ -68,8 +60,9 @@ body.light .kpi-card,.order-row,.alert-item{background:#fff}
   <div class="logo">Order<span>1</span> <span style="font-size:13px;color:var(--gray);font-weight:400;margin-left:8px">Manager</span></div>
   <div class="header-right">
     <div class="live"><div class="live-dot"></div>LIVE</div>
+    <span class="sync-indicator sync-ok" id="sync-status">⬆ SYNC</span>
     <button class="icon-btn" onclick="toggleTheme()">🌙</button>
-    <button class="icon-btn" onclick="render()">↻ Refresh</button>
+    <button class="icon-btn" onclick="loadOrders()">↻ Refresh</button>
   </div>
 </div>
 
@@ -80,7 +73,6 @@ body.light .kpi-card,.order-row,.alert-item{background:#fff}
   <div class="tab" id="tab-alerts" onclick="switchTab('alerts')">Alerts</div>
 </div>
 
-<!-- OVERVIEW -->
 <div id="panel-overview">
   <div class="kpi-grid">
     <div class="kpi-card highlight">
@@ -110,7 +102,6 @@ body.light .kpi-card,.order-row,.alert-item{background:#fff}
   </div>
 </div>
 
-<!-- LIVE ORDERS -->
 <div id="panel-orders" style="display:none">
   <div class="section">
     <div class="section-title">Restaurant orders</div>
@@ -120,7 +111,6 @@ body.light .kpi-card,.order-row,.alert-item{background:#fff}
   </div>
 </div>
 
-<!-- PLATFORMS -->
 <div id="panel-platforms" style="display:none">
   <div class="section">
     <div class="section-title">Orders by platform</div>
@@ -128,7 +118,6 @@ body.light .kpi-card,.order-row,.alert-item{background:#fff}
   </div>
 </div>
 
-<!-- ALERTS -->
 <div id="panel-alerts" style="display:none">
   <div class="section">
     <div class="section-title">Active alerts</div>
@@ -137,46 +126,119 @@ body.light .kpi-card,.order-row,.alert-item{background:#fff}
 </div>
 
 <script>
-const PLATFORMS={Talabat:{color:'#FF6600'},Noon:{color:'#FCCD00'},Careem:{color:'#00A858'},HungerStation:{color:'#E5004B'},Deliveroo:{color:'#00CD9D'},InstaShop:{color:'#5BB26C'}};
-let darkMode=true;
+const SUPABASE_URL = 'https://ddfcgwwkwzavnlaeyfbk.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_tdMf-gnECmGrpCC-jqZ5LQ_NAyEAOmu';
+const RESTAURANT_ID = 'rascals01';
 
-function loadState(){
-  try{return JSON.parse(localStorage.getItem('orderone_state')||'{}');}catch(e){return{};}
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const PLATFORMS = {
+  Talabat:{color:'#FF6600'},Noon:{color:'#FCCD00'},Careem:{color:'#00A858'},
+  HungerStation:{color:'#E5004B'},Deliveroo:{color:'#00CD9D'},InstaShop:{color:'#5BB26C'}
+};
+
+let orders = [];
+let allTimeOrders = [];
+let darkMode = true;
+
+function setSyncStatus(ok) {
+  const el = document.getElementById('sync-status');
+  el.textContent = ok ? '⬆ SYNC' : '✗ OFFLINE';
+  el.className = 'sync-indicator ' + (ok ? 'sync-ok' : 'sync-err');
 }
 
-function switchTab(t){
-  ['overview','orders','platforms','alerts'].forEach(id=>{
-    document.getElementById('panel-'+id).style.display='none';
+async function loadOrders() {
+  try {
+    // Load active/ready orders
+    const { data: active, error: e1 } = await sb
+      .from('orders')
+      .select('*')
+      .eq('restaurant_id', RESTAURANT_ID)
+      .in('status', ['active', 'ready'])
+      .order('created_at', { ascending: false });
+    if (e1) throw e1;
+
+    // Load all today's orders for stats
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const { data: all, error: e2 } = await sb
+      .from('orders')
+      .select('*')
+      .eq('restaurant_id', RESTAURANT_ID)
+      .gte('created_at', today.toISOString())
+      .order('created_at', { ascending: false });
+    if (e2) throw e2;
+
+    orders = (active || []).map(row => ({
+      id: row.id,
+      num: row.id,
+      platform: row.platform,
+      section: row.section || 'restaurant',
+      status: row.status,
+      total: row.total || 0,
+      time: new Date(row.created_at).getTime(),
+      readyAt: row.status === 'ready' ? new Date(row.updated_at).getTime() : null
+    }));
+
+    allTimeOrders = (all || []).map(row => ({
+      id: row.id,
+      platform: row.platform,
+      total: row.total || 0,
+      status: row.status
+    }));
+
+    setSyncStatus(true);
+    render();
+  } catch(e) {
+    console.error(e);
+    setSyncStatus(false);
+  }
+}
+
+function subscribeToOrders() {
+  sb.channel('manager-channel')
+    .on('postgres_changes', {
+      event: '*',
+      schema: 'public',
+      table: 'orders',
+      filter: `restaurant_id=eq.${RESTAURANT_ID}`
+    }, () => {
+      loadOrders();
+    })
+    .subscribe();
+}
+
+function switchTab(t) {
+  ['overview','orders','platforms','alerts'].forEach(id => {
+    document.getElementById('panel-'+id).style.display = 'none';
     document.getElementById('tab-'+id).classList.remove('active');
   });
-  document.getElementById('panel-'+t).style.display='block';
+  document.getElementById('panel-'+t).style.display = 'block';
   document.getElementById('tab-'+t).classList.add('active');
   render();
 }
 
-function render(){
-  const state=loadState();
-  const orders=state.orders||[];
-  const active=orders.filter(o=>o.status==='active'||o.status==='ready');
-  const done=orders.filter(o=>o.status==='collected');
-  const revenue=state.totalRevenue||0;
-  const doneCount=state.doneCount||0;
+function render() {
+  const completed = allTimeOrders.filter(o => !['active','ready'].includes(o.status));
+  const revenue = allTimeOrders.reduce((s, o) => s + (o.total || 0), 0);
+  const totalOrders = allTimeOrders.length;
+  const avgOrder = totalOrders > 0 ? Math.round(revenue / totalOrders) : 0;
 
-  // KPIs
-  document.getElementById('k-revenue').textContent='AED '+revenue;
-  document.getElementById('k-orders').textContent=doneCount;
-  document.getElementById('k-active').textContent=active.length;
-  document.getElementById('k-avg').textContent=doneCount>0?'AED '+Math.round(revenue/doneCount):'AED 0';
+  document.getElementById('k-revenue').textContent = 'AED ' + revenue;
+  document.getElementById('k-orders').textContent = totalOrders;
+  document.getElementById('k-active').textContent = orders.length;
+  document.getElementById('k-avg').textContent = 'AED ' + avgOrder;
 
-  // Overview platforms
-  const platEl=document.getElementById('overview-platforms');
-  if(platEl){
-    const platCounts={};
-    orders.forEach(o=>{if(!platCounts[o.platform])platCounts[o.platform]=0;platCounts[o.platform]++;});
-    const max=Math.max(...Object.values(platCounts),1);
-    platEl.innerHTML=Object.entries(PLATFORMS).map(([p,info])=>{
-      const count=platCounts[p]||0;
-      return`<div class="platform-row">
+  // Platform breakdown for overview
+  const platEl = document.getElementById('overview-platforms');
+  if (platEl) {
+    const platCounts = {};
+    allTimeOrders.forEach(o => { platCounts[o.platform] = (platCounts[o.platform] || 0) + 1; });
+    const max = Math.max(...Object.values(platCounts), 1);
+    platEl.innerHTML = Object.entries(PLATFORMS).map(([p, info]) => {
+      const count = platCounts[p] || 0;
+      return `<div class="platform-row">
         <div class="platform-name" style="color:${info.color}">${p}</div>
         <div class="platform-bar-wrap"><div class="platform-bar-fill" style="width:${(count/max)*100}%;background:${info.color}"></div></div>
         <div class="platform-count">${count}</div>
@@ -184,27 +246,31 @@ function render(){
     }).join('');
   }
 
-  // Live orders
-  const restEl=document.getElementById('live-restaurant');
-  const barEl=document.getElementById('live-bar');
-  if(restEl){
-    const restOrders=active.filter(o=>o.section!=='bar');
-    restEl.innerHTML=restOrders.length?restOrders.map(o=>orderRow(o)).join(''):'<div style="color:var(--gray);font-size:13px;padding:8px 0">No restaurant orders active</div>';
+  // Live orders split by section
+  const restEl = document.getElementById('live-restaurant');
+  const barEl = document.getElementById('live-bar');
+  if (restEl) {
+    const restOrders = orders.filter(o => o.section !== 'bar');
+    restEl.innerHTML = restOrders.length
+      ? restOrders.map(o => orderRow(o)).join('')
+      : '<div style="color:var(--gray);font-size:13px;padding:8px 0">No restaurant orders active</div>';
   }
-  if(barEl){
-    const barOrders=active.filter(o=>o.section==='bar');
-    barEl.innerHTML=barOrders.length?barOrders.map(o=>orderRow(o)).join(''):'<div style="color:var(--gray);font-size:13px;padding:8px 0">No bar orders active</div>';
+  if (barEl) {
+    const barOrders = orders.filter(o => o.section === 'bar');
+    barEl.innerHTML = barOrders.length
+      ? barOrders.map(o => orderRow(o)).join('')
+      : '<div style="color:var(--gray);font-size:13px;padding:8px 0">No bar orders active</div>';
   }
 
-  // Platform breakdown
-  const pbEl=document.getElementById('platform-breakdown');
-  if(pbEl){
-    const platCounts={};
-    orders.forEach(o=>{if(!platCounts[o.platform])platCounts[o.platform]=0;platCounts[o.platform]++;});
-    const max=Math.max(...Object.values(platCounts),1);
-    pbEl.innerHTML=Object.entries(PLATFORMS).map(([p,info])=>{
-      const count=platCounts[p]||0;
-      return`<div class="platform-row">
+  // Platform breakdown tab
+  const pbEl = document.getElementById('platform-breakdown');
+  if (pbEl) {
+    const platCounts = {};
+    allTimeOrders.forEach(o => { platCounts[o.platform] = (platCounts[o.platform] || 0) + 1; });
+    const max = Math.max(...Object.values(platCounts), 1);
+    pbEl.innerHTML = Object.entries(PLATFORMS).map(([p, info]) => {
+      const count = platCounts[p] || 0;
+      return `<div class="platform-row">
         <div class="platform-name" style="color:${info.color}">${p}</div>
         <div class="platform-bar-wrap"><div class="platform-bar-fill" style="width:${(count/max)*100}%;background:${info.color}"></div></div>
         <div class="platform-count">${count} orders</div>
@@ -213,40 +279,44 @@ function render(){
   }
 
   // Alerts
-  const alertsEl=document.getElementById('alerts-list');
-  if(alertsEl){
-    const expired=active.filter(o=>o.readyAt&&(Date.now()-o.readyAt)/1000>600);
-    const slow=active.filter(o=>(Date.now()-o.time)/1000>600&&!o.readyAt);
-    const alerts=[
-      ...expired.map(o=>({text:`Order ${o.num} (${o.platform}) — driver has not collected for 10+ minutes`,critical:true})),
-      ...slow.map(o=>({text:`Order ${o.num} (${o.platform}) — in kitchen for 10+ minutes`,critical:false})),
+  const alertsEl = document.getElementById('alerts-list');
+  if (alertsEl) {
+    const expired = orders.filter(o => o.readyAt && (Date.now() - o.readyAt) / 1000 > 600);
+    const slow = orders.filter(o => (Date.now() - o.time) / 1000 > 600 && !o.readyAt);
+    const alerts = [
+      ...expired.map(o => ({ text: `Order ${o.num} (${o.platform}) — driver has not collected for 10+ minutes`, critical: true })),
+      ...slow.map(o => ({ text: `Order ${o.num} (${o.platform}) — in kitchen for 10+ minutes`, critical: false })),
     ];
-    alertsEl.innerHTML=alerts.length
-      ?alerts.map(a=>`<div class="alert-item ${a.critical?'critical':''}"><div class="alert-text">${a.critical?'🔴':'⚠️'} ${a.text}</div></div>`).join('')
-      :'<div style="color:var(--gray);font-size:13px;padding:12px 0">✓ No active alerts — everything looks good</div>';
+    alertsEl.innerHTML = alerts.length
+      ? alerts.map(a => `<div class="alert-item ${a.critical ? 'critical' : ''}"><div class="alert-text">${a.critical ? '🔴' : '⚠️'} ${a.text}</div></div>`).join('')
+      : '<div style="color:var(--gray);font-size:13px;padding:12px 0">✓ No active alerts — everything looks good</div>';
   }
 }
 
-function orderRow(o){
-  const pc=PLATFORMS[o.platform]?.color||'#888';
-  const elapsed=Math.floor((Date.now()-o.time)/1000);
-  const mins=Math.floor(elapsed/60);
-  return`<div class="order-row">
+function orderRow(o) {
+  const pc = PLATFORMS[o.platform]?.color || '#888';
+  const elapsed = Math.floor((Date.now() - o.time) / 1000);
+  const mins = Math.floor(elapsed / 60);
+  return `<div class="order-row">
     <div class="order-left">
       <span class="order-platform" style="color:${pc}">${o.platform}</span>
-      <span class="order-num">${o.num} · ${o.section==='bar'?'🍹 Bar':'🍔 Restaurant'}</span>
+      <span class="order-num">${o.num} · ${o.section === 'bar' ? '🍹 Bar' : '🍔 Restaurant'}</span>
     </div>
     <div class="order-right">
-      <span class="status-pill ${o.status}">${o.status==='ready'?'Ready':'In kitchen'}</span>
-      <span class="order-time">${mins}m ago · AED ${o.total||0}</span>
+      <span class="status-pill ${o.status}">${o.status === 'ready' ? 'Ready' : 'In kitchen'}</span>
+      <span class="order-time">${mins}m ago · AED ${o.total}</span>
     </div>
   </div>`;
 }
 
-function toggleTheme(){darkMode=!darkMode;document.body.classList.toggle('light',!darkMode);}
+function toggleTheme() {
+  darkMode = !darkMode;
+  document.body.classList.toggle('light', !darkMode);
+}
 
-setInterval(render,5000);
-render();
+subscribeToOrders();
+loadOrders();
+setInterval(() => render(), 1000);
 </script>
 </body>
 </html>
