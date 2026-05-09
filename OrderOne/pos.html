@@ -149,7 +149,7 @@ body.light .order-time,body.light .order-num,body.light .stat-lbl{color:#666}
     Orders <span class="tab-badge" id="active-badge">0</span>
   </div>
   <div class="tab" id="tab-display" onclick="switchTab('display')">Display</div>
-  <div class="tab" id="tab-menu" onclick="switchTab('menu')">Menu</div>
+  
 </div>
 
 <div id="panel-orders">
@@ -293,6 +293,7 @@ async function pushToSupabase(order) {
   try {
     const { error } = await sb.from('orders').upsert({
       id: order.id.toString(),
+      num: order.num,
       platform: order.platform,
       items: order.items,
       total: order.total,
@@ -336,7 +337,8 @@ function subscribeToOrders() {
         const existingIdx = orders.findIndex(o => o.id.toString() === incoming.id);
         const mapped = {
           id: incoming.id,
-          num: incoming.id,
+          num: incoming.num || incoming.id,
+          total: incoming.total || 0,
           platform: incoming.platform,
           items: incoming.items || [],
           total: incoming.total || 0,
@@ -403,7 +405,7 @@ function addOrder() {
   const total = items.reduce((s,i)=>s+i.price,0);
   
   pendingOrder = {
-    id: Date.now(),
+    id: Date.now().toString(),
     num,
     platform: selectedPlatform,
     section: selectedSection,
@@ -501,7 +503,7 @@ function selS(btn) {
 }
 
 function switchTab(t) {
-  ['orders','display','menu'].forEach(id=>{
+  ['orders','display'].forEach(id=>{
     document.getElementById('panel-'+id).classList.add('hidden');
     document.getElementById('tab-'+id).classList.remove('active');
   });
@@ -574,7 +576,7 @@ function render() {
         ${expired
           ?`<button class="action-btn expired-dismiss" onclick="dismissExpired('${o.id}')">⚠️ Expired — dismiss</button>`
           :o.status==='active'
-            ?`<button class="action-btn ready-btn" onclick="markReady('${o.id}')">Mark ready ✓</button>`
+            ?`<div style="padding:10px;background:rgba(245,158,11,0.1);border-radius:8px;font-size:13px;font-weight:600;color:var(--amber);text-align:center">⏳ In kitchen — waiting for KDS</div>`
             :`<button class="action-btn collected-btn" onclick="markCollected('${o.id}')">Collected ✓</button>`
         }
         ${!expired?`<button class="action-btn reprint-btn" onclick="reprint('${o.id}')">🖨️</button>`:''}
@@ -615,6 +617,26 @@ function toggleTheme() {
 }
 
 // ===== INIT =====
+async function loadExistingOrders() {
+  try {
+    const { data, error } = await sb.from('orders').select('*').eq('restaurant_id', RESTAURANT_ID).in('status', ['active', 'ready']).order('created_at', { ascending: true });
+    if (error) throw error;
+    orders = (data || []).map(row => ({
+      id: row.id,
+      num: row.num || row.id,
+      platform: row.platform,
+      section: row.section || 'restaurant',
+      items: row.items || [],
+      total: row.total || 0,
+      status: row.status,
+      time: new Date(row.created_at).getTime(),
+      readyAt: row.status === 'ready' ? new Date(row.updated_at).getTime() : null
+    }));
+    setSyncStatus(true);
+    render();
+  } catch(e) { console.error(e); setSyncStatus(false); }
+}
+loadExistingOrders();
 subscribeToOrders();
 setInterval(()=>render(), 1000);
 render();
